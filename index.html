@@ -70,7 +70,6 @@
       border: 1px solid rgba(127, 54, 43, 0.08);
     }
 
-
     body {
       font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
       color: var(--ink);
@@ -85,7 +84,6 @@
       background-size: auto, auto, 96px 96px;
       background-attachment: fixed;
     }
-
 
     body::before {
       content: "";
@@ -125,7 +123,6 @@
       position: relative;
       z-index: 1;
     }
-
 
     .site-header {
       position: sticky;
@@ -257,6 +254,17 @@
       max-width: 760px;
       font-size: clamp(17px, 2vw, 21px);
       color: #40352d;
+      position: relative;
+      z-index: 1;
+    }
+
+    .fiction-note {
+      max-width: 760px;
+      margin-top: 18px;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: rgba(36, 29, 24, 0.56);
       position: relative;
       z-index: 1;
     }
@@ -404,7 +412,6 @@
       font-size: 15px;
     }
 
-
     .faction-brief {
       color: #3e332b;
       font-size: 15px;
@@ -433,7 +440,6 @@
       font-size: 12px;
       font-weight: 700;
     }
-
 
     .open-hint {
       margin-top: auto;
@@ -491,7 +497,6 @@
       color: var(--accent);
       font-weight: 700;
     }
-
 
     .detail-panel h3 {
       font-size: 34px;
@@ -563,6 +568,10 @@
     .dark .hero-summary,
     .dark .faction-card dd { color: #e6d8c6; }
 
+    .dark .fiction-note {
+      color: rgba(239, 229, 213, 0.58);
+    }
+
     .dark .detail-box {
       background: rgba(22, 20, 18, 0.72);
       border-color: rgba(75, 64, 54, 0.95);
@@ -605,7 +614,7 @@
         flex-direction: column;
       }
     }
-  
+
     .nav-links a,
     .theme-toggle,
     .btn {
@@ -627,9 +636,9 @@
     .detail-box {
       border-radius: 8px;
     }
-
   </style>
 </head>
+
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="主导航">
@@ -637,6 +646,7 @@
         <span class="brand-mark" aria-hidden="true"><i class="fa-regular fa-compass"></i></span>
         <span>四方势力志</span>
       </a>
+
       <div class="nav-links">
         <a href="#overview">世界概览</a>
         <a href="#factions">四方势力</a>
@@ -651,10 +661,17 @@
     <section class="hero" id="overview">
       <div class="hero-card">
         <p class="eyebrow">溪云初起日沉阁，山雨欲来风满楼</p>
+
         <h1>四方并立</h1>
+
         <p class="hero-summary">
           晏朝末年，天下名义上统归晏都。朝廷虽有旧帝与官僚维系正统，但王令难出都城，实权渐分四方：朔方掌兵马，淮郡保水乡百业，烛山诸部据群山而自成母系氏族的少数民族联盟。旧朝礼法、边镇军权、民间自治与山地部族秩序并立，乱世由此展开。
         </p>
+
+        <p class="fiction-note">
+          本站为原创 OC 世界观设定展示，人物、势力与相关情节均属虚构。
+        </p>
+
         <div class="hero-actions">
           <a class="btn primary" href="#factions">四方势力</a>
           <a class="btn secondary" href="#resources">势力详志</a>
@@ -670,6 +687,7 @@
           <h2>四方势力</h2>
         </div>
       </div>
+
       <div class="faction-grid" id="factionGrid"></div>
     </section>
 
@@ -682,7 +700,7 @@
       </div>
 
       <div class="resource-panel">
-<article class="detail-panel" id="detailPanel">
+        <article class="detail-panel" id="detailPanel">
           <h3>晏都</h3>
           <p class="detail-meta">旧朝正统；旧帝与朝廷官僚所在</p>
           <div class="detail-grid" id="detailGrid"></div>
@@ -782,6 +800,7 @@
       `;
 
       card.addEventListener("click", () => selectFaction(index));
+
       card.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
@@ -794,34 +813,39 @@
 
     function selectFaction(index, shouldScroll = true) {
       const faction = factions[index];
+
       document.querySelectorAll(".faction-card").forEach((card, cardIndex) => {
         card.classList.toggle("active", cardIndex === index);
       });
 
       detailPanel.querySelector("h3").textContent = faction.name;
       detailPanel.querySelector(".detail-meta").textContent = faction.position;
+
       detailGrid.innerHTML = `
         <div class="detail-box">
           <b>政治形态</b>
           <p>${faction.politics}</p>
         </div>
+
         <div class="detail-box">
           <b>旧制关系</b>
           <p>${faction.relation}</p>
         </div>
+
         <div class="detail-box">
           <b>核心优势</b>
           <p>${faction.strengths}</p>
         </div>
+
         <div class="detail-box">
           <b>主要弱点</b>
           <p>${faction.weakness}</p>
         </div>
+
         <div class="detail-box">
           <b>社会 / 文化氛围</b>
           <p>${faction.culture}</p>
         </div>
-
       `;
 
       if (shouldScroll) {
@@ -832,11 +856,11 @@
       }
     }
 
-
     function init() {
       factions.forEach((faction, index) => {
         factionGrid.appendChild(createFactionCard(faction, index));
       });
+
       selectFaction(0, false);
     }
 
