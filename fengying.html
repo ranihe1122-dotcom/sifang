@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>冯瑛</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --cloth: #bea78b;
+    --paper: #efe6d3;
+    --line: rgba(36, 31, 27, 0.34);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      linear-gradient(135deg, #efe6d3 0%, #d9c8ad 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+  }
+
+  .card {
+    width: 600px;
+    height: 700px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(36,31,27,0.42);
+    background:
+      linear-gradient(180deg, rgba(244,238,224,0.82), rgba(228,216,194,0.78)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0.16'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='180' height='180' fill='%23e5dccb'/%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: cover, 230px 230px;
+    box-shadow: 0 22px 58px rgba(36,31,27,0.22);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.035) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.026) 0 1px, transparent 1px 8px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(36,31,27,0.28);
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  .corner-bg {
+    position: absolute;
+    z-index: 2;
+    left: 3%;
+    top: 3%;
+    width: 100px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.18;
+    filter: sepia(0.12) contrast(0.95);
+    pointer-events: none;
+  }
+
+  .circle-mark {
+    position: absolute;
+    left: 7%;
+    top: 6.6%;
+    z-index: 10;
+    width: 92px;
+    height: 92px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    box-shadow: none;
+  }
+
+  .circle-mark img {
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: sepia(0.08) contrast(1.08);
+  }
+
+  .poem-bg {
+    position: absolute;
+    z-index: 3;
+    right: -5%;
+    bottom: 3%;
+    width: 285px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.2;
+    filter: sepia(0.18) contrast(0.95);
+    pointer-events: none;
+  }
+
+  .portrait {
+    position: absolute;
+    left: -13%;
+    top: -50%;
+    width: 85%;
+    height: 200%;
+    object-fit: contain;
+    object-position: center center;
+    z-index: 9;
+    opacity: 1;
+    filter:
+      drop-shadow(0 18px 18px rgba(0,0,0,0.16));
+  }
+
+  .info-panel {
+    position: absolute;
+    z-index: 10;
+    right: 5.2%;
+    top: 10%;
+    width: 37%;
+    height: 78%;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    border-left: 7px solid rgba(36,31,27,0.70);
+  }
+
+  .side-title {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    border-right: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: rgba(239,232,216,0.52);
+    display: flex;
+    align-items: center;
+    padding: 12px 6px;
+    font-size: 13px;
+    letter-spacing: 0.20em;
+    color: var(--deep);
+    font-weight: 700;
+  }
+
+  .side-title b {
+    color: var(--cinnabar);
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .main-info {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    background: rgba(239,232,216,0.48);
+    padding: 14px 14px 12px 16px;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .main-info::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 6px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .name-img {
+    width: 82px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: sepia(0.08) contrast(1.08);
+    transform: translateX(-8px);
+  }
+
+  .identity {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    color: rgba(36,31,27,0.76);
+    padding-top: 30px;
+    transform: translateX(-12px);
+  }
+
+  .identity b {
+    color: var(--cinnabar);
+    font-weight: 800;
+  }
+
+  .facts {
+    display: grid;
+    gap: 3px;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+
+  .facts p {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 10px;
+    border-bottom: 1px solid rgba(36,31,27,0.18);
+    padding-bottom: 3px;
+  }
+
+  .facts b {
+    color: var(--deep);
+    font-family: "Songti SC", "STSong", serif;
+    font-weight: 700;
+  }
+
+  .facts span {
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 14px;
+    color: rgba(36,31,27,0.88);
+  }
+
+  .bio {
+    font-size: 11px;
+    line-height: 1.58;
+    text-align: justify;
+    color: rgba(36,31,27,0.88);
+  }
+
+  .bio b {
+    color: var(--cinnabar);
+  }
+
+  .relation-title {
+    margin: 7px 0 4px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(36,31,27,0.18);
+    font-family: "Songti SC", "STSong", serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--cinnabar);
+    font-weight: 700;
+  }
+
+  .relation-list {
+    display: grid;
+    gap: 4px;
+  }
+
+  .relation-list a {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 6px;
+    padding: 4px 5px;
+    border: 1px solid rgba(36,31,27,0.16);
+    background: rgba(239,232,216,0.36);
+    color: rgba(36,31,27,0.88);
+    text-decoration: none;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 10.5px;
+    line-height: 1.34;
+  }
+
+  .relation-list a:hover {
+    background: rgba(136,58,30,0.10);
+  }
+
+  .relation-list b {
+    color: var(--cinnabar);
+    font-family: "Songti SC", "STSong", serif;
+    font-weight: 700;
+  }
+
+  .page-no {
+    position: absolute;
+    right: 8%;
+    top: 6%;
+    z-index: 10;
+    font-family: "Times New Roman", serif;
+    font-size: 18px;
+    color: rgba(36,31,27,0.70);
+  }
+
+  .back-link {
+    position: absolute;
+    right: 6%;
+    bottom: 4.2%;
+    z-index: 12;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.58);
+    color: rgba(36,31,27,0.78);
+    text-decoration: none;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    box-shadow: 0 4px 12px rgba(36,31,27,0.08);
+  }
+
+  .back-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+  }
+
+  .caption {
+    position: absolute;
+    left: 8%;
+    bottom: 5%;
+    z-index: 7;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    letter-spacing: 0.24em;
+    font-size: 11px;
+    color: rgba(36,31,27,0.68);
+  }
+
+  .caption::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #9d2418;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  .figure-zone {
+    position: absolute;
+    left: 9%;
+    top: 15%;
+    width: 58%;
+    height: 68%;
+    z-index: 4;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(247,241,226,0.42),
+      rgba(247,241,226,0.06) 62%,
+      transparent 76%
+    );
+    pointer-events: none;
+  }
+
+  @media (max-width: 680px) {
+    body {
+      padding: 12px;
+      align-items: start;
+    }
+
+    .card {
+      width: 100vw;
+      max-width: 430px;
+      height: 650px;
+    }
+
+    .card::after {
+      inset: 14px;
+    }
+
+    .corner-bg {
+      left: 4%;
+      top: 3%;
+      width: 86px;
+      opacity: 0.16;
+    }
+
+    .circle-mark {
+      left: 1%;
+      top: 3%;
+      width: 76px;
+      height: 76px;
+    }
+
+    .circle-mark img {
+      width: 35px;
+      height: 70px;
+    }
+
+    .page-no {
+      right: 8%;
+      top: 5%;
+      font-size: 16px;
+    }
+
+    .portrait {
+      left: -28%;
+      top: -45%;
+      width: 105%;
+      height: 190%;
+      z-index: 9;
+    }
+
+    .figure-zone {
+      left: -2%;
+      top: 16%;
+      width: 72%;
+      height: 66%;
+    }
+
+    .poem-bg {
+      right: -8%;
+      bottom: 5%;
+      width: 265px;
+      opacity: 0.16;
+    }
+
+    .info-panel {
+      right: 7%;
+      top: 12%;
+      width: 43%;
+      height: 72%;
+      grid-template-columns: 40px 1fr;
+      border-left: 6px solid rgba(36,31,27,0.70);
+      z-index: 10;
+    }
+
+    .side-title {
+      padding: 10px 4px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+    }
+
+    .side-title b {
+      font-size: 15px;
+    }
+
+    .main-info {
+      padding: 12px 10px 10px 12px;
+      max-height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .main-info::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
+
+    .top {
+      grid-template-columns: 62px 1fr;
+      gap: 4px;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .name-img {
+      width: 72px;
+      transform: translateX(-8px);
+    }
+
+    .identity {
+      font-size: 11px;
+      line-height: 1.45;
+      padding-top: 26px;
+      transform: translateX(-10px);
+    }
+
+    .facts {
+      gap: 3px;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+
+    .facts p {
+      grid-template-columns: 46px 1fr;
+      gap: 8px;
+      padding-bottom: 2px;
+    }
+
+    .facts span {
+      font-size: 14px;
+    }
+
+    .bio {
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .relation-title {
+      margin-top: 7px;
+      padding-top: 5px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .relation-list {
+      gap: 4px;
+    }
+
+    .relation-list a {
+      grid-template-columns: 36px 1fr;
+      gap: 5px;
+      padding: 4px 5px;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .back-link {
+      right: 7%;
+      bottom: 3.2%;
+      padding: 5px 9px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .caption {
+      left: 7%;
+      bottom: 5%;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="card" aria-label="冯瑛角色设卡竖版">
+    <img
+      class="corner-bg"
+      src="https://f2.toyhou.se/file/f2-toyhou-se/images/121162746_7Q9a43AztFpkrmE.png"
+      alt="左上角底纹"
+    >
+
+    <div class="circle-mark" aria-hidden="true">
+      <img
+        src="https://f2.toyhou.se/file/f2-toyhou-se/images/120642110_GITyLu4Psj5SNIa.png"
+        alt="淮郡"
+      >
+    </div>
+
+    <img
+      class="poem-bg"
+      src="https://f2.toyhou.se/file/f2-toyhou-se/images/121162753_ND0k4Dqdq51cIRU.png"
+      alt="书法底纹"
+    >
+
+    <div class="page-no">01</div>
+
+    <div class="figure-zone" aria-hidden="true"></div>
+
+    <img
+      class="portrait"
+      src="https://f2.toyhou.se/file/f2-toyhou-se/images/121208824_x5QTPcRnxXD01BE.png"
+      alt="冯瑛立绘"
+    >
+
+    <section class="info-panel">
+      <div class="side-title">
+        <b>淮郡</b>世子夫人
+      </div>
+
+      <div class="main-info">
+        <div class="top">
+          <img
+            class="name-img"
+            src="https://f2.toyhou.se/file/f2-toyhou-se/images/121162227_WNMA8ElikBXt8FW.png"
+            alt="冯瑛"
+          >
+
+          <p class="identity">
+            「折芦花赠远<br>
+            零落一身秋」
+          </p>
+        </div>
+
+        <div class="facts">
+          <p><b>名</b><span>冯瑛</span></p>
+          <p><b>字</b><span>令仪</span></p>
+          <p><b>生辰</b><span>冬月初十</span></p>
+          <p><b>年龄</b><span>十八</span></p>
+        </div>
+
+        <p class="bio">
+          <b>出身自朔国。</b>长兄冯珵去世后，次兄冯圭以和亲求盟，带精兵与金银嫁入淮郡境内，嫁与齐斐为世子夫人。心思细腻、喜爱饲弄花草，不爱争执。
+        </p>
+
+        <div class="relations">
+          <div class="relation-title">角色关系</div>
+          <div class="relation-list">
+            <a href="xinyi.html"><b>辛夷</b><span>好友</span></a>
+            <a href="fengcheng.html"><b>冯珵</b><span>大哥</span></a>
+            <a href="fenggui.html"><b>冯圭</b><span>二哥</span></a>
+            <a href="qifei.html"><b>齐斐</b><span>丈夫</span></a>
+            <a href="shenyinxiu.html"><b>慎胤秀</b><span>侍卫</span></a>
+            <a href="yeqichi.html"><b>叶栖迟</b><span>好友</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <a class="back-link" href="characters.html">返回人物志</a>
+
+    <div class="caption">HUAI JUN · FENG YING</div>
+  </main>
+</body>
+</html>
