@@ -283,6 +283,43 @@
     color: var(--cinnabar);
   }
 
+  /* 第二层：城市名缩小 */
+  .map-page.view-huai .map-label,
+  .map-page.view-yan .map-label,
+  .map-page.view-shuo .map-label,
+  .map-page.view-zhushan .map-label {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    padding: 3px 7px;
+    top: -30px;
+  }
+
+  /* 第三层：淮郡城内地点名缩小 */
+  .map-page.view-huaijun .map-label {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 3px 7px;
+    top: -30px;
+  }
+
+  .map-page.view-huai .map-point:hover .map-label,
+  .map-page.view-huai .map-point:focus-visible .map-label,
+  .map-page.view-huai .map-point.selected .map-label,
+  .map-page.view-yan .map-point:hover .map-label,
+  .map-page.view-yan .map-point:focus-visible .map-label,
+  .map-page.view-yan .map-point.selected .map-label,
+  .map-page.view-shuo .map-point:hover .map-label,
+  .map-page.view-shuo .map-point:focus-visible .map-label,
+  .map-page.view-shuo .map-point.selected .map-label,
+  .map-page.view-zhushan .map-point:hover .map-label,
+  .map-page.view-zhushan .map-point:focus-visible .map-label,
+  .map-page.view-zhushan .map-point.selected .map-label,
+  .map-page.view-huaijun .map-point:hover .map-label,
+  .map-page.view-huaijun .map-point:focus-visible .map-label,
+  .map-page.view-huaijun .map-point.selected .map-label {
+    top: -33px;
+  }
+
   .map-tip {
     margin-top: 12px;
     color: rgba(36,31,27,0.62);
@@ -414,16 +451,45 @@
     }
 
     .map-label {
-      top: -34px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      padding: 3px 7px;
+      top: -30px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
     }
 
     .map-point:hover .map-label,
     .map-point:focus-visible .map-label,
     .map-point.selected .map-label {
-      top: -37px;
+      top: -33px;
+    }
+
+    .map-page.view-huai .map-label,
+    .map-page.view-yan .map-label,
+    .map-page.view-shuo .map-label,
+    .map-page.view-zhushan .map-label,
+    .map-page.view-huaijun .map-label {
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      padding: 2px 5px;
+      top: -26px;
+    }
+
+    .map-page.view-huai .map-point:hover .map-label,
+    .map-page.view-huai .map-point:focus-visible .map-label,
+    .map-page.view-huai .map-point.selected .map-label,
+    .map-page.view-yan .map-point:hover .map-label,
+    .map-page.view-yan .map-point:focus-visible .map-label,
+    .map-page.view-yan .map-point.selected .map-label,
+    .map-page.view-shuo .map-point:hover .map-label,
+    .map-page.view-shuo .map-point:focus-visible .map-label,
+    .map-page.view-shuo .map-point.selected .map-label,
+    .map-page.view-zhushan .map-point:hover .map-label,
+    .map-page.view-zhushan .map-point:focus-visible .map-label,
+    .map-page.view-zhushan .map-point.selected .map-label,
+    .map-page.view-huaijun .map-point:hover .map-label,
+    .map-page.view-huaijun .map-point:focus-visible .map-label,
+    .map-page.view-huaijun .map-point.selected .map-label {
+      top: -29px;
     }
 
     .map-point::before {
@@ -444,7 +510,7 @@
 </head>
 
 <body>
-  <main class="map-page">
+  <main class="map-page view-world" id="mapPage">
     <header class="topbar">
       <div class="brand">
         <p class="eyebrow">MAP</p>
@@ -587,7 +653,7 @@
           x: 36,
           y: 83,
           type: "info",
-          desc: "临水小城，客栈与渡船相邻，常为远行、短暂停驻之地"
+          desc: "临水小城，客栈与渡船相邻，常为远行、短暂停驻之地。"
         }
       ]
     },
@@ -701,7 +767,7 @@
           x: 28,
           y: 34,
           type: "info",
-          desc: "族人盟誓之地，诸部联姻、颁布政令皆由此立"
+          desc: "族人盟誓之地，诸部联姻、颁布政令皆由此立。"
         }
       ]
     },
@@ -771,6 +837,7 @@
   let selectedPointKey = null;
   const isTouchDevice = window.matchMedia("(hover: none)").matches;
 
+  const mapPage = document.querySelector("#mapPage");
   const mapLayer = document.querySelector("#mapLayer");
   const mapImage = document.querySelector("#mapImage");
   const pointsLayer = document.querySelector("#pointsLayer");
@@ -778,6 +845,19 @@
   const mapInfo = document.querySelector("#mapInfo");
   const backBtn = document.querySelector("#backBtn");
   const worldBtn = document.querySelector("#worldBtn");
+
+  function setViewClass(viewName) {
+    mapPage.classList.remove(
+      "view-world",
+      "view-huai",
+      "view-yan",
+      "view-shuo",
+      "view-zhushan",
+      "view-huaijun"
+    );
+
+    mapPage.classList.add(`view-${viewName}`);
+  }
 
   function showInfo(point) {
     const modeText = point.type === "enter" ? "可进入下一层" : "地点简介";
@@ -873,6 +953,7 @@
     }
 
     currentView = viewName;
+    setViewClass(viewName);
     mapTitle.textContent = view.title;
     pointsLayer.innerHTML = "";
 
@@ -901,6 +982,7 @@
     }
 
     currentView = viewName;
+    setViewClass(viewName);
     mapTitle.textContent = view.title;
     pointsLayer.innerHTML = "";
     mapLayer.classList.add("fading");
@@ -946,6 +1028,7 @@
     selectedPointKey = null;
     historyStack = [];
     currentView = "world";
+    setViewClass("world");
 
     const view = views.world;
 
