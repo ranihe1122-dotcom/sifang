@@ -624,6 +624,8 @@
             电脑端：悬停显示简介，点击进入该区域地图
             <br>
             手机端：单击显示简介，双击进入该区域地图
+            <br>
+            图片由易制地图制作
           </p>
 
           <div class="legend">
@@ -644,6 +646,9 @@
 
 <script>
   const WORLD_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121283569_b7bp1ZOUUySr670.jpg";
+  const HUAIJUN_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121325085_lyWpx7h2x1eIiaN.jpg";
+  const HUAIWANGFU_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121325083_LCi5P93upz322X9.jpg";
+  const ZHANGSHIYUAN_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121325083_LCi5P93upz322X9.jpg";
 
   const views = {
     world: {
@@ -855,7 +860,7 @@
 
     huaijun: {
       title: "淮郡",
-      image: "images/huaijun-map.jpg",
+      image: HUAIJUN_MAP,
       transform: "scale(1) translate(0, 0)",
       back: "huai",
       path: "四方地图 / 淮 / 淮郡",
@@ -941,7 +946,7 @@
 
     huaiwangfu: {
       title: "淮王府",
-      image: "images/huaiwangfu-map.jpg",
+      image: HUAIWANGFU_MAP,
       transform: "scale(1) translate(0, 0)",
       back: "huaijun",
       path: "四方地图 / 淮 / 淮郡 / 淮王府",
@@ -979,7 +984,7 @@
 
     zhangshiyuan: {
       title: "长史院",
-      image: "images/zhangshiyuan-map.jpg",
+      image: ZHANGSHIYUAN_MAP,
       transform: "scale(1) translate(0, 0)",
       back: "huaijun",
       path: "四方地图 / 淮 / 淮郡 / 长史院",
