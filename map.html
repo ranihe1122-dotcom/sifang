@@ -207,16 +207,30 @@
     left: calc(var(--x) * 1%);
     top: calc(var(--y) * 1%);
     transform: translate(-50%, -50%);
-    z-index: 7;
+    z-index: 20;
     border: none;
     background: transparent;
     cursor: pointer;
     font-family: "Songti SC", "STSong", serif;
   }
 
+  .map-point:hover,
+  .map-point:focus-visible,
+  .map-point.selected {
+    z-index: 40;
+  }
+
+  .map-point.has-bubble:hover,
+  .map-point.has-bubble:focus-visible,
+  .map-point.has-bubble.selected {
+    z-index: 200;
+  }
+
   .map-point::before {
     content: "";
     display: block;
+    position: relative;
+    z-index: 5;
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -263,6 +277,7 @@
     left: 50%;
     top: -36px;
     transform: translateX(-50%);
+    z-index: 6;
     white-space: nowrap;
     padding: 4px 9px;
     border: 1px solid rgba(36,31,27,0.28);
@@ -281,6 +296,70 @@
   .map-point.selected .map-label {
     top: -40px;
     color: var(--cinnabar);
+  }
+
+  .point-bubble {
+    position: absolute;
+    left: 34px;
+    bottom: -15px;
+    width: 210px;
+    padding: 7px;
+    border: 1px solid rgba(36,31,27,0.32);
+    background: rgba(248,240,222,0.96);
+    box-shadow:
+      0 18px 34px rgba(36,31,27,0.22),
+      0 0 0 4px rgba(239,232,216,0.32);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px) scale(0.98);
+    transition: 0.2s ease;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .point-bubble.bubble-left {
+    left: auto;
+    right: 34px;
+    bottom: -15px;
+  }
+
+  .point-bubble::after {
+    content: "";
+    position: absolute;
+    left: -7px;
+    bottom: 18px;
+    width: 12px;
+    height: 12px;
+    background: rgba(248,240,222,0.96);
+    border-left: 1px solid rgba(36,31,27,0.32);
+    border-bottom: 1px solid rgba(36,31,27,0.32);
+    transform: rotate(45deg);
+  }
+
+  .point-bubble.bubble-left::after {
+    left: auto;
+    right: -7px;
+    bottom: 18px;
+    border-left: none;
+    border-bottom: none;
+    border-right: 1px solid rgba(36,31,27,0.32);
+    border-top: 1px solid rgba(36,31,27,0.32);
+  }
+
+  .point-bubble img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid rgba(36,31,27,0.18);
+    background: rgba(239,232,216,0.74);
+  }
+
+  .map-point:hover .point-bubble,
+  .map-point:focus-visible .point-bubble,
+  .map-point.selected .point-bubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
   }
 
   .map-page.view-huai .map-label,
@@ -564,6 +643,23 @@
       top: -25px;
     }
 
+    .point-bubble {
+      left: 24px;
+      bottom: -14px;
+      width: 160px;
+      padding: 5px;
+    }
+
+    .point-bubble.bubble-left {
+      right: 24px;
+      bottom: -14px;
+    }
+
+    .point-bubble::after,
+    .point-bubble.bubble-left::after {
+      bottom: 14px;
+    }
+
     .map-point::before {
       width: 12px;
       height: 12px;
@@ -649,6 +745,9 @@
   const HUAIJUN_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121325085_lyWpx7h2x1eIiaN.jpg";
   const HUAIWANGFU_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121325083_LCi5P93upz322X9.jpg";
   const ZHANGSHIYUAN_MAP = "https://f2.toyhou.se/file/f2-toyhou-se/images/121325083_LCi5P93upz322X9.jpg";
+
+  const BUBBLE_HOUYUAN = "https://f2.toyhou.se/file/f2-toyhou-se/images/121326775_aKTdg0LY87tm30U.jpg";
+  const BUBBLE_YISHITING = "https://f2.toyhou.se/file/f2-toyhou-se/images/121326777_kQrPoazWpUf8yGb.jpg";
 
   const views = {
     world: {
@@ -963,7 +1062,12 @@
           x: 50,
           y: 50,
           type: "info",
-          desc: "齐临川与臣子议政之所，粮运、城防、军事等诸多事项在此商议。"
+          desc: "齐临川与臣子议政之所，粮运、城防、军事等诸多事项在此商议。",
+          bubble: {
+            image: BUBBLE_YISHITING,
+            alt: "淮王府议事厅小景",
+            position: "bubble-left"
+          }
         },
         {
           name: "内书房",
@@ -1001,7 +1105,11 @@
           x: 54,
           y: 66,
           type: "info",
-          desc: "长史院后侧小院，清静少人。詹明会于此暂歇、读书或接待亲信。"
+          desc: "长史院后侧小院，清静少人。詹明会于此暂歇、读书或接待亲信。",
+          bubble: {
+            image: BUBBLE_HOUYUAN,
+            alt: "长史院后院小景"
+          }
         }
       ]
     }
@@ -1086,18 +1194,35 @@
     });
   }
 
+  function renderBubble(point) {
+    if (!point.bubble || !point.bubble.image) {
+      return "";
+    }
+
+    const positionClass = point.bubble.position || "";
+
+    return `
+      <span class="point-bubble ${positionClass}" aria-hidden="true">
+        <img src="${point.bubble.image}" alt="${point.bubble.alt || point.name}">
+      </span>
+    `;
+  }
+
   function renderPoints(view) {
     pointsLayer.innerHTML = "";
 
     view.points.forEach((point) => {
       const btn = document.createElement("button");
-      btn.className = `map-point ${point.type}`;
+      btn.className = `map-point ${point.type}${point.bubble ? " has-bubble" : ""}`;
       btn.type = "button";
       btn.style.setProperty("--x", point.x);
       btn.style.setProperty("--y", point.y);
       btn.setAttribute("aria-label", point.name);
 
-      btn.innerHTML = `<span class="map-label">${point.name}</span>`;
+      btn.innerHTML = `
+        <span class="map-label">${point.name}</span>
+        ${renderBubble(point)}
+      `;
 
       btn.addEventListener("mouseenter", () => {
         if (!isTouchDevice) {
