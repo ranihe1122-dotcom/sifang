@@ -283,23 +283,23 @@
     color: var(--cinnabar);
   }
 
-  /* 第二层：城市名缩小 */
+  /* 第二层：淮郡、江亭、望津这类城市名 */
   .map-page.view-huai .map-label,
   .map-page.view-yan .map-label,
   .map-page.view-shuo .map-label,
   .map-page.view-zhushan .map-label {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    padding: 3px 7px;
-    top: -30px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    padding: 2px 5px;
+    top: -26px;
   }
 
-  /* 第三层：淮郡内地点名缩小 */
+  /* 第三层：淮王府、记室院这类城内地点 */
   .map-page.view-huaijun .map-label {
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    padding: 3px 7px;
-    top: -30px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    padding: 2px 5px;
+    top: -26px;
   }
 
   .map-page.view-huai .map-point:hover .map-label,
@@ -317,7 +317,7 @@
   .map-page.view-huaijun .map-point:hover .map-label,
   .map-page.view-huaijun .map-point:focus-visible .map-label,
   .map-page.view-huaijun .map-point.selected .map-label {
-    top: -33px;
+    top: -29px;
   }
 
   .map-tip {
@@ -468,10 +468,10 @@
     .map-page.view-shuo .map-label,
     .map-page.view-zhushan .map-label,
     .map-page.view-huaijun .map-label {
-      font-size: 10px;
-      letter-spacing: 0.04em;
-      padding: 2px 5px;
-      top: -26px;
+      font-size: 8px;
+      letter-spacing: 0.02em;
+      padding: 1px 4px;
+      top: -22px;
     }
 
     .map-page.view-huai .map-point:hover .map-label,
@@ -489,7 +489,7 @@
     .map-page.view-huaijun .map-point:hover .map-label,
     .map-page.view-huaijun .map-point:focus-visible .map-label,
     .map-page.view-huaijun .map-point.selected .map-label {
-      top: -29px;
+      top: -25px;
     }
 
     .map-point::before {
@@ -773,7 +773,7 @@
     },
 
     huaijun: {
-      title: "淮郡",
+      title: "淮郡城",
       image: "images/huaijun-map.jpg",
       transform: "scale(1) translate(0, 0)",
       back: "huai",
