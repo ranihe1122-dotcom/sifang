@@ -287,7 +287,9 @@
   .map-page.view-yan .map-label,
   .map-page.view-shuo .map-label,
   .map-page.view-zhushan .map-label,
-  .map-page.view-huaijun .map-label {
+  .map-page.view-huaijun .map-label,
+  .map-page.view-huaiwangfu .map-label,
+  .map-page.view-zhangshiyuan .map-label {
     font-size: 10px;
     letter-spacing: 0.04em;
     padding: 2px 5px;
@@ -308,7 +310,13 @@
   .map-page.view-zhushan .map-point.selected .map-label,
   .map-page.view-huaijun .map-point:hover .map-label,
   .map-page.view-huaijun .map-point:focus-visible .map-label,
-  .map-page.view-huaijun .map-point.selected .map-label {
+  .map-page.view-huaijun .map-point.selected .map-label,
+  .map-page.view-huaiwangfu .map-point:hover .map-label,
+  .map-page.view-huaiwangfu .map-point:focus-visible .map-label,
+  .map-page.view-huaiwangfu .map-point.selected .map-label,
+  .map-page.view-zhangshiyuan .map-point:hover .map-label,
+  .map-page.view-zhangshiyuan .map-point:focus-visible .map-label,
+  .map-page.view-zhangshiyuan .map-point.selected .map-label {
     top: -29px;
   }
 
@@ -523,7 +531,9 @@
     .map-page.view-yan .map-label,
     .map-page.view-shuo .map-label,
     .map-page.view-zhushan .map-label,
-    .map-page.view-huaijun .map-label {
+    .map-page.view-huaijun .map-label,
+    .map-page.view-huaiwangfu .map-label,
+    .map-page.view-zhangshiyuan .map-label {
       font-size: 8px;
       letter-spacing: 0.02em;
       padding: 1px 4px;
@@ -544,7 +554,13 @@
     .map-page.view-zhushan .map-point.selected .map-label,
     .map-page.view-huaijun .map-point:hover .map-label,
     .map-page.view-huaijun .map-point:focus-visible .map-label,
-    .map-page.view-huaijun .map-point.selected .map-label {
+    .map-page.view-huaijun .map-point.selected .map-label,
+    .map-page.view-huaiwangfu .map-point:hover .map-label,
+    .map-page.view-huaiwangfu .map-point:focus-visible .map-label,
+    .map-page.view-huaiwangfu .map-point.selected .map-label,
+    .map-page.view-zhangshiyuan .map-point:hover .map-label,
+    .map-page.view-zhangshiyuan .map-point:focus-visible .map-label,
+    .map-page.view-zhangshiyuan .map-point.selected .map-label {
       top: -25px;
     }
 
@@ -848,7 +864,9 @@
           name: "淮王府",
           x: 50,
           y: 36,
-          type: "info",
+          type: "enter",
+          target: "huaiwangfu",
+          enterMode: "image",
           desc: "淮王齐临川居、执务之处，设正堂、议事厅与内书房。"
         },
         {
@@ -856,7 +874,7 @@
           x: 58,
           y: 42,
           type: "info",
-          desc: "齐斐与冯瑛婚后所居，建于王府东侧。"
+          desc: "齐斐与冯瑛婚后所居，别第近王府，内设侍从、护卫与书房，凡大事仍入淮王府议决。"
         },
         {
           name: "集市",
@@ -883,7 +901,9 @@
           name: "长史院",
           x: 42,
           y: 44,
-          type: "info",
+          type: "enter",
+          target: "zhangshiyuan",
+          enterMode: "image",
           desc: "詹明居住、办公之处，靠近议事厅，烛火常燃不熄。"
         },
         {
@@ -917,6 +937,68 @@
           ]
         }
       ]
+    },
+
+    huaiwangfu: {
+      title: "淮王府",
+      image: "images/huaiwangfu-map.jpg",
+      transform: "scale(1) translate(0, 0)",
+      back: "huaijun",
+      path: "四方地图 / 淮 / 淮郡 / 淮王府",
+      points: [
+        {
+          name: "正堂",
+          x: 50,
+          y: 34,
+          type: "info",
+          desc: "淮王府正堂，接见使者、宣召属官、执务之处。"
+        },
+        {
+          name: "议事厅",
+          x: 50,
+          y: 50,
+          type: "info",
+          desc: "齐临川与臣子议政之所，粮运、城防、军事等诸多事项在此商议。"
+        },
+        {
+          name: "内书房",
+          x: 62,
+          y: 45,
+          type: "info",
+          desc: "齐临川批复文书、处理密奏、召见近臣之处，未尽传召不得擅入。"
+        },
+        {
+          name: "西院",
+          x: 34,
+          y: 54,
+          type: "info",
+          desc: "齐琅日常起居、读书习武之处，位于王府西侧。"
+        }
+      ]
+    },
+
+    zhangshiyuan: {
+      title: "长史院",
+      image: "images/zhangshiyuan-map.jpg",
+      transform: "scale(1) translate(0, 0)",
+      back: "huaijun",
+      path: "四方地图 / 淮 / 淮郡 / 长史院",
+      points: [
+        {
+          name: "书房",
+          x: 48,
+          y: 42,
+          type: "info",
+          desc: "詹明批阅公文、推演局势、整理文书之处，案前常堆满地图、简牍与墨迹。"
+        },
+        {
+          name: "后院",
+          x: 54,
+          y: 66,
+          type: "info",
+          desc: "长史院后侧小院，清静少人。詹明会于此暂歇、读书或接待亲信。"
+        }
+      ]
     }
   };
 
@@ -941,7 +1023,9 @@
       "view-yan",
       "view-shuo",
       "view-zhushan",
-      "view-huaijun"
+      "view-huaijun",
+      "view-huaiwangfu",
+      "view-zhangshiyuan"
     );
 
     mapPage.classList.add(`view-${viewName}`);
