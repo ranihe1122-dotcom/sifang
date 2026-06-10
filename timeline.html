@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>四方志·时间线</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --green: #315444;
+    --paper: #efe6d3;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.66);
+    --shadow: 0 18px 42px rgba(36,31,27,0.16);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      linear-gradient(135deg, #efe6d3 0%, #d9c8ad 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(980px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 20px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .intro-card {
+    margin-bottom: 20px;
+    padding: 18px 20px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.78), rgba(239,232,216,0.68));
+    box-shadow: var(--shadow);
+  }
+
+  .intro-card p {
+    font-size: 15px;
+    line-height: 1.85;
+    color: rgba(36,31,27,0.78);
+  }
+
+  .timeline-shell {
+    position: relative;
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.86), rgba(235,224,204,0.76));
+    box-shadow: var(--shadow);
+    padding: 26px 28px 30px;
+    overflow: hidden;
+  }
+
+  .timeline-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.55;
+  }
+
+  .timeline {
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(136,58,30,0.48),
+      rgba(36,31,27,0.20),
+      transparent
+    );
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 48px;
+    padding-bottom: 28px;
+  }
+
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 9px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--cinnabar);
+    border: 2px solid rgba(248,240,222,0.96);
+    box-shadow:
+      0 0 0 5px rgba(136,58,30,0.14),
+      0 0 18px rgba(136,58,30,0.22);
+  }
+
+  .year {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    border: 1px solid rgba(136,58,30,0.24);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+
+  .event-list {
+    display: grid;
+    gap: 7px;
+  }
+
+  .event-list p {
+    color: rgba(36,31,27,0.86);
+    font-size: 15px;
+    line-height: 1.9;
+    text-align: justify;
+  }
+
+  .footer-note {
+    margin-top: 18px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
+    .timeline-shell {
+      padding: 22px 18px 26px;
+    }
+
+    .timeline::before {
+      left: 11px;
+    }
+
+    .timeline-item {
+      padding-left: 36px;
+      padding-bottom: 26px;
+    }
+
+    .timeline-item::before {
+      left: 5px;
+      top: 9px;
+    }
+
+    .year {
+      font-size: 16px;
+      letter-spacing: 0.08em;
+    }
+
+    .event-list p {
+      font-size: 14px;
+      line-height: 1.85;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">CHRONICLE</p>
+        <h1>四方志·时间线</h1>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回首页</a>
+      </nav>
+    </header>
+
+
+    <section class="timeline-shell">
+      <div class="timeline">
+        <article class="timeline-item">
+          <h2 class="year">固元元年</h2>
+          <div class="event-list">
+            <p>晏朝新帝高子谏即位，封两位异姓王。淮王齐临川，朔王冯珵。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元二年</h2>
+          <div class="event-list">
+            <p>晏朝高子谏沉迷卜卦之术，凡事决策以钦天监所言为重，丝毫不顾民情，百姓民不聊生。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元三年</h2>
+          <div class="event-list">
+            <p>詹明出身旧族，受家案牵连，齐临川查明案情判他无罪，提携詹明为淮国长使，教习二位公子。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元六年</h2>
+          <div class="event-list">
+            <p>淮国公子齐斐获封淮国世子。</p>
+            <p>朔国饥荒，朔国以四万精兵向淮国换粮。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元七年</h2>
+          <div class="event-list">
+            <p>淮国蘅浦大旱，齐临川亲写罪己书祈雨。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元八年</h2>
+          <div class="event-list">
+            <p>淮国世子齐斐请辛夷出山。</p>
+            <p>詹明立新法，广招贤士不问出身，异族人亦可入仕。而后荐辛夷于朝，辛夷为司工参军。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元九年</h2>
+          <div class="event-list">
+            <p>朔王冯珵亲征，朔军攻下玄塞，冯珵凯旋半途遇袭去世，冯圭继位。</p>
+            <p>晏朝姜玄辞官赴淮郡定居。</p>
+            <p>辛夷于市井遇姜玄，荐于朝，姜玄为记事参军。</p>
+            <p>朔王冯圭密信一封递给淮王齐临川提出联姻。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十年</h2>
+          <div class="event-list">
+            <p>朔王之妹冯瑛携精兵与金银赴淮嫁与世子为夫人。淮朔之盟成立。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十二年</h2>
+          <div class="event-list">
+            <p>朔王冯珵之夫人王廷芝诞下长子，冯衍。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十三年</h2>
+          <div class="event-list">
+            <p>烛山大祭司阿诺里算出晏朝气数已尽，停止向晏朝进贡。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十四年</h2>
+          <div class="event-list">
+            <p>晏朝骠骑将军李璜领兵攻烛山，烛山自守。</p>
+            <p>淮朔各自起兵攻晏。</p>
+            <p>淮国镇国大将军郑昌延率淮军攻承京，朔国大将军谢煜领朔军攻奉陵。</p>
+            <p>奉陵一战，朔军急战，大胜。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十五年</h2>
+          <div class="event-list">
+            <p>朔国长使徐谌心衰力竭而死，其子徐言钦接任长使一职。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十六年</h2>
+          <div class="event-list">
+            <p>承京一战，淮军胜，淮国记事参军姜玄被俘，而后自刎。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十七年</h2>
+          <div class="event-list">
+            <p>淮王齐临川之夫人虞孟英诞下龙凤胎，齐珂、齐璇。</p>
+            <p>淮国军师詹明病逝。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元十八年</h2>
+          <div class="event-list">
+            <p>淮国公子齐琅领兵支援烛山。烛山一战，淮国将军郑麟书为公子齐琅挡下致命一刀，战死沙场，晏朝退兵，齐琅自请驻守淮国边境。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元二十年</h2>
+          <div class="event-list">
+            <p>淮朔联合攻下晏都，高子谏不愿退位，朔国大将军谢煜手刃旧帝，晏朝倾覆。</p>
+            <p>朔国内乱，淮朔之争未起已平，淮国稳住南境局势。</p>
+            <p>淮王齐临川去世，齐斐继位。</p>
+          </div>
+        </article>
+
+        <article class="timeline-item">
+          <h2 class="year">固元二十二年</h2>
+          <div class="event-list">
+            <p>冯圭被圈禁，朔国内乱平息。</p>
+            <p>冯瑛继位朔王，主动提出归降于淮国，齐斐称帝。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+
+  </main>
+</body>
+</html>
