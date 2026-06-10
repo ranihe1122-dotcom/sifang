@@ -78,7 +78,17 @@
     font-size: 38px;
     letter-spacing: 0.18em;
     font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .page-caption {
     margin-bottom: 26px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.58);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.12em;
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
   }
 
   nav {
@@ -171,9 +181,11 @@
   .shuofang { --force-color: var(--shuofang); }
   .huaijun { --force-color: var(--huaijun); }
   .zhushan { --force-color: var(--zhushan); }
+
   .mixed-huai-shuo {
     --force-color: linear-gradient(180deg, var(--shuofang) 0 50%, var(--huaijun) 50% 100%);
   }
+
   .mixed-huai-zhu {
     --force-color: linear-gradient(180deg, var(--zhushan) 0 50%, var(--huaijun) 50% 100%);
   }
@@ -277,7 +289,13 @@
 
     h1 {
       font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .page-caption {
       margin-bottom: 22px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
     }
 
     .char-card {
@@ -292,27 +310,28 @@
     <header>
       <p class="eyebrow">CHARACTERS</p>
       <h1>四方人物志</h1>
+      <p class="page-caption">角色年龄为登场时年龄，即固元十年</p>
 
       <nav>
-        <a href="#jiuchao">晏都</a>
-        <a href="#shuofang">朔方</a>
-        <a href="#huaijun">淮郡</a>
+        <a href="#jiuchao">晏</a>
+        <a href="#shuofang">朔</a>
+        <a href="#huaijun">淮</a>
         <a href="#zhushan">烛山</a>
         <a href="index.html">返回世界观</a>
       </nav>
 
       <div class="legend" aria-label="势力颜色">
-        <span><i style="background:#CF9D19"></i>晏都</span>
-        <span><i style="background:#6571B5"></i>朔方</span>
-        <span><i style="background:#2E9486"></i>淮郡</span>
+        <span><i style="background:#CF9D19"></i>晏</span>
+        <span><i style="background:#6571B5"></i>朔</span>
+        <span><i style="background:#2E9486"></i>淮</span>
         <span><i style="background:#80230F"></i>烛山</span>
       </div>
     </header>
 
     <section class="section" id="jiuchao">
       <div class="section-head">
-        <h2>晏都</h2>
-        <span>YAN DU</span>
+        <h2>晏</h2>
+        <span>YAN</span>
       </div>
 
       <div class="grid">
@@ -329,8 +348,8 @@
 
     <section class="section" id="shuofang">
       <div class="section-head">
-        <h2>朔方</h2>
-        <span>SHUO FANG</span>
+        <h2>朔</h2>
+        <span>SHUO</span>
       </div>
 
       <div class="grid">
@@ -369,6 +388,15 @@
             <a class="btn" href="shenyinxiu.html">人设卡</a>
           </div>
         </article>
+
+        <article class="char-card shuofang">
+          <span class="faction">朔方</span>
+          <h3 class="char-name">徐言钦</h3>
+          <p class="char-sub">长史之子</p>
+          <div class="links">
+            <a class="btn" href="xuyanqin.html">人设卡</a>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -394,6 +422,15 @@
           <p class="char-sub">字章华 · 世子</p>
           <div class="links">
             <a class="btn" href="qifei.html">人设卡</a>
+          </div>
+        </article>
+
+        <article class="char-card huaijun">
+          <span class="faction">淮郡</span>
+          <h3 class="char-name">齐琅</h3>
+          <p class="char-sub">字怀石 · 淮王二公子</p>
+          <div class="links">
+            <a class="btn" href="qilang.html">人设卡</a>
           </div>
         </article>
 
@@ -435,15 +472,6 @@
 
         <article class="char-card huaijun">
           <span class="faction">淮郡</span>
-          <h3 class="char-name">齐琅</h3>
-          <p class="char-sub">字怀石 · 淮王二公子</p>
-          <div class="links">
-            <a class="btn" href="qilang.html">人设卡</a>
-          </div>
-        </article>
-
-        <article class="char-card huaijun">
-          <span class="faction">淮郡</span>
           <h3 class="char-name">叶栖迟</h3>
           <p class="char-sub">字长安 · 茶楼老板</p>
           <div class="links">
@@ -457,6 +485,15 @@
           <p class="char-sub">字子墨 · 记室参军</p>
           <div class="links">
             <a class="btn" href="jiangxuan.html">人设卡</a>
+          </div>
+        </article>
+
+        <article class="char-card huaijun">
+          <span class="faction">淮郡</span>
+          <h3 class="char-name">郑麟书</h3>
+          <p class="char-sub">字文尧 · 将军</p>
+          <div class="links">
+            <a class="btn" href="zhenglinshu.html">人设卡</a>
           </div>
         </article>
       </div>
