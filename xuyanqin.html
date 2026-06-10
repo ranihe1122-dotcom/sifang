@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>徐言钦</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --paper: #efe6d3;
+    --line: rgba(36, 31, 27, 0.34);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      linear-gradient(135deg, #efe6d3 0%, #d9c8ad 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+  }
+
+  .card {
+    width: 600px;
+    min-height: 700px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(36,31,27,0.42);
+    background:
+      linear-gradient(180deg, rgba(244,238,224,0.82), rgba(228,216,194,0.78)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0.16'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='180' height='180' fill='%23e5dccb'/%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: cover, 230px 230px;
+    box-shadow: 0 22px 58px rgba(36,31,27,0.22);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.035) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.026) 0 1px, transparent 1px 8px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(36,31,27,0.28);
+    z-index: 8;
+    pointer-events: none;
+  }
+
+
+  .circle-mark {
+    position: absolute;
+    left: 7%;
+    top: 6.6%;
+    z-index: 10;
+    width: 92px;
+    height: 92px;
+    display: grid;
+    place-items: center;
+  }
+
+  .circle-mark img {
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+    opacity: 0.9;
+    filter: sepia(0.08) contrast(1.08);
+  }
+
+  .page-no {
+    position: absolute;
+    right: 8%;
+    top: 6%;
+    z-index: 10;
+    font-family: "Times New Roman", serif;
+    font-size: 18px;
+    color: rgba(36,31,27,0.70);
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    min-height: 700px;
+    padding: 98px 72px 64px 76px;
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 22px;
+  }
+
+  .side-title {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    border-right: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: rgba(239,232,216,0.52);
+    display: flex;
+    align-items: center;
+    padding: 16px 8px;
+    font-size: 13px;
+    letter-spacing: 0.20em;
+    color: var(--deep);
+    font-weight: 700;
+  }
+
+  .side-title b {
+    color: var(--cinnabar);
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .main-info {
+    border-left: 7px solid rgba(36,31,27,0.70);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    background: rgba(239,232,216,0.50);
+    padding: 28px 30px 30px 32px;
+  }
+
+  .name-block {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }
+
+  .name {
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+
+  .identity {
+    margin-top: 14px;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 16px;
+    letter-spacing: 0.10em;
+    color: rgba(36,31,27,0.76);
+  }
+
+  .identity b { color: var(--cinnabar); font-weight: 800; }
+
+  .facts {
+    display: grid;
+    gap: 6px;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .facts p {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 14px;
+    border-bottom: 1px solid rgba(36,31,27,0.18);
+    padding-bottom: 4px;
+  }
+
+  .facts b {
+    color: var(--deep);
+    font-family: "Songti SC", "STSong", serif;
+    font-weight: 700;
+  }
+
+  .facts span {
+    font-size: 16px;
+    color: rgba(36,31,27,0.88);
+  }
+
+  .section-title {
+    margin: 20px 0 8px;
+    font-size: 14px;
+    letter-spacing: 0.20em;
+    color: var(--cinnabar);
+    border-bottom: 1px solid rgba(36,31,27,0.18);
+    padding-bottom: 5px;
+  }
+
+  .bio {
+    font-size: 14px;
+    line-height: 1.82;
+    text-align: justify;
+    color: rgba(36,31,27,0.88);
+  }
+
+  .bio b { color: var(--cinnabar); }
+
+
+  .relation-list {
+    display: grid;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .relation-list a {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+    padding: 8px 10px;
+    border: 1px solid rgba(36,31,27,0.18);
+    background: rgba(239,232,216,0.38);
+    color: rgba(36,31,27,0.88);
+    text-decoration: none;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 14px;
+    line-height: 1.55;
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+
+  .relation-list a:hover {
+    background: rgba(136,58,30,0.10);
+    transform: translateX(2px);
+  }
+
+  .relation-list b {
+    color: var(--cinnabar);
+    font-family: "Songti SC", "STSong", serif;
+    font-weight: 700;
+  }
+
+  .back-link {
+    position: absolute;
+    right: 8%;
+    bottom: 5%;
+    z-index: 12;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.58);
+    color: rgba(36,31,27,0.78);
+    text-decoration: none;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "Songti SC", "STSong", serif;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    box-shadow: 0 4px 12px rgba(36,31,27,0.08);
+  }
+
+  .back-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+  }
+  .caption {
+    position: absolute;
+    left: 8%;
+    bottom: 5%;
+    z-index: 10;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    color: rgba(36,31,27,0.68);
+  }
+
+  .caption::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #9d2418;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  @media (max-width: 680px) {
+    body { padding: 12px; align-items: start; }
+    .circle-mark { display: none; }
+    .card { width: 100vw; max-width: 430px; min-height: 650px; }
+    .card::after { inset: 14px; }
+    .page-no { right: 8%; top: 5%; font-size: 16px; }
+    .content {
+      min-height: 650px;
+      padding: 88px 34px 62px 34px;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+    }
+    .side-title { padding: 12px 5px; font-size: 12px; letter-spacing: 0.16em; }
+    .side-title b { font-size: 15px; }
+    .main-info { border-left-width: 6px; padding: 22px 18px 24px 20px; }
+    .name { font-size: 34px; letter-spacing: 0.14em; }
+    .identity { font-size: 14px; line-height: 1.65; }
+    .facts { gap: 4px; font-size: 13px; line-height: 1.48; margin-bottom: 14px; }
+    .facts p { grid-template-columns: 58px 1fr; gap: 10px; padding-bottom: 3px; }
+    .facts span { font-size: 14px; }
+    .section-title { margin-top: 16px; font-size: 12px; }
+    .bio { font-size: 12px; line-height: 1.7; }
+    .relation-list a {
+      grid-template-columns: 54px 1fr;
+      gap: 8px;
+      padding: 7px 8px;
+      font-size: 12px;
+    }
+        .back-link {
+      right: 7%;
+      bottom: 3.2%;
+      padding: 5px 9px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+    .caption { left: 7%; bottom: 5%; font-size: 10px; letter-spacing: 0.18em; }
+  }
+</style>
+</head>
+
+<body>
+  <main class="card" aria-label="无立绘角色设卡">
+
+    <div class="circle-mark" aria-hidden="true">
+      <img
+        src="https://f2.toyhou.se/file/f2-toyhou-se/images/121165033_gCEVtELJR9V7G2z.png"
+        alt="淮郡"
+      >
+    </div>
+
+    <div class="page-no">00</div>
+
+    <section class="content">
+      <div class="side-title">
+        <b>朔方</b>长使之子
+      </div>
+
+      <div class="main-info">
+        <div class="name-block">
+          <h1 class="name">徐言钦</h1>
+        </div>
+
+        <div class="facts">
+          <p><b>名</b><span>徐言钦</span></p>
+          <p><b>字</b><span>诚之</span></p>
+          <p><b>生辰</b><span>冬月廿六</span></p>
+          <p><b>年龄</b><span>二十</span></p>
+        </div>
+
+        <h2 class="section-title">简介</h2>
+        <p class="bio">
+朔国长史徐谌之子，从小被徐谌亲自教导，天资聪慧，为人通透，徐谌离世后，他接任长史之位，继续辅佐朔王。
+        </p>
+        
+
+
+        </div>
+      </div>
+    </section>
+    <a class="back-link" href="characters.html">返回人物志</a>
+    <div class="caption">SHUO FANG · XU YANQIN</div>
+  </main>
+</body>
+</html>
