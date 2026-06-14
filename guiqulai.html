@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>归去来</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">CHRONICLES</p>
+        <h1>归去来</h1>
+        <p class="page-caption">四方纪闻 · 固元十七年</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="texts.html">返回纪闻</a>
+        <a class="nav-link" href="index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">固元十七年</span>
+        <span class="type-tag">纪闻</span>
+      </div>
+
+      <h2 class="text-title">归去来</h2>
+      <p class="text-subtitle">辛夷 · 詹明 · 齐临川 · 齐斐 · 冯瑛 · 齐琅</p>
+      <div class="divider"></div>
+
+      <div class="article-body">
+        <p>固元十七年。</p>
+
+        <p>这一年的冬天来得格外早。</p>
+
+        <p>从去年开始，詹明的身子就一日不如一日。府医说是积劳成疾，脏器皆有亏损，只能慢慢将养着，已然没有了根治的法子。</p>
+
+        <p>詹明自己倒是不在意，文书照看不误，偶尔还会去司工署看辛夷打铁，只是话比平日里多了些。</p>
+
+        <p>反倒是辛夷开始睡不安稳了。</p>
+
+        <p>两年前，姜玄在承京一战中被晏朝所俘，只传回来了他自刎的消息，连遗骨都没有见着。</p>
+
+        <p>那时，辛夷没哭，只是常做噩梦。</p>
+
+        <p>梦见姜玄拎着酒壶靠在司工署的院门口，辛夷喊他进来，他却不应。她跑过去，却怎么也抓不住他。</p>
+
+        <p>惊醒时，泪湿枕巾。</p>
+
+        <p>如今詹明的身子又不好了。</p>
+
+        <p>若是他有什么好歹……</p>
+
+        <p>她不敢再往下想了。</p>
+
+        <p>这一日夜里，她还未睡下，就有人来叩门。</p>
+
+        <p>那敲门声又急又重，像是要把门板拍碎。</p>
+
+        <p>她心头一惊，立即披衣下床，还未来得及穿鞋，便赤脚跑出去拉开了院门。</p>
+
+        <p>“参军大人，长史大人怕是不好了。”</p>
+
+        <p>辛夷当即就要出门，也亏得是小厮提醒，她这才发现自己还没穿鞋。</p>
+
+        <p>便又回了屋里，套上鞋袜，抓起一件厚衣裳换上。</p>
+
+        <p>再推门出去的时候，外面开始下起了雪籽。</p>
+
+        <p>长史院离她的司工署不算太远，但许是天冷了，总觉得马也跑得要比平时慢些。</p>
+
+        <p>辛夷到时，长史院里已经站了不少人。</p>
+
+        <p>齐琅站在院子里，他双手抱胸靠墙站着，肩上落了一层薄雪，看样子已经在这里站了好一会儿了，他的脸半隐在阴影里，看不清神色。</p>
+
+        <p>齐斐站在廊下，身后跟着两个侍从，冯瑛立于他身侧，一只手搭在他的小臂上，像是在撑着他直立。</p>
+
+        <p>慎胤秀依旧是站在院门边上，只是他今日没有配兵器。</p>
+
+        <p>还有很多人，府医、侍从站满了整条回廊。</p>
+
+        <p>冯瑛看见辛夷来了，没有立即走到她身边，只是远远朝她点了点头。</p>
+
+        <p>辛夷缓步走了进去。</p>
+
+        <p>屋里烧着炭盆，暖融融的。</p>
+
+        <p>詹明躺在床上，面色苍白得近乎透明，呼吸又浅又急。</p>
+
+        <p>辛夷在床边的椅子上坐下，伸手搭了搭他的脉。</p>
+
+        <p>很弱，像是一根快要断掉的线。</p>
+
+        <p>“无晦。”</p>
+
+        <p>她唤了一声，詹明没有反应。</p>
+
+        <p>她改了称呼，又叫了一声。</p>
+
+        <p>“先生。”</p>
+
+        <p>从她入仕起，就是唤詹明为先生的，也不知道是从哪一天开始改口喊他无晦。</p>
+
+        <p>喊了这么多年，可她还是觉得，叫“先生”更近一些。</p>
+
+        <p>像是自己人。</p>
+
+        <p>詹明慢慢睁开了眼睛。</p>
+
+        <p>那双眼还和从前一样沉静，只是如今不像以往那般清亮，像是一面蒙了尘的镜子。</p>
+
+        <p>“桑若……”他的声音很轻，像是从很远的地方传来的，“几时了？”</p>
+
+        <p>“刚过丑时。”</p>
+
+        <p>“外面来了多少人？”</p>
+
+        <p>“都来了。”</p>
+
+        <p>詹明沉默了片刻，忽而笑了，“倒是不用再去请。”</p>
+
+        <p>辛夷红了眼眶，想说些什么，喉咙口却像是被堵住了，一个字也说不出来。</p>
+
+        <p>詹明又闭上了眼睛，问她，“子墨走时，留的那句话，你还记得吗？”</p>
+
+        <p>辛夷的手攥紧了自己的衣袍。</p>
+
+        <p>“记得。他说，姜玄无憾，诸君珍重，盼逢于黄泉碧落。”</p>
+
+        <p>詹明叹了一口气，“我从未想过，他会是我们几个之中最先去的。”</p>
+
+        <p>姜玄自刎的消息传到淮国时，谁都不信。</p>
+
+        <p>那个整日嬉皮笑脸，酒壶不离手的记室参军大人，说他一句便有十句等着。</p>
+
+        <p>那样的人，怎么会就这样走了。</p>
+
+        <p>没有投降、没有求饶。</p>
+
+        <p>只传回来了这么一句话。</p>
+
+        <p>辛夷不知道该说些什么，只是慢慢等着他继续说下去。</p>
+
+        <p>“桑若，你今后要好好辅佐主公。”詹明朝她伸出了手，辛夷连忙握住，却不敢用力。</p>
+
+        <p>“世子殿下聪慧，治国之策上也颇有主公的风范，只是容易心软，二公子也不坏，他只是想不明白从前那些事，心里怨我，是我对不住他，你今后要对他们二人多加规劝……”</p>
+
+        <p>“先生，这些我都知道……”</p>
+
+        <p>她不想再听了，这些嘱咐，每一句都像是在交代后事。</p>
+
+        <p>“子墨他一个人在那边，等了这么久也该闷了，我过去，他也能有伴。”</p>
+
+        <p>“不……”辛夷哽咽了，“主公还没来，先生你再等等。”</p>
+
+        <p>“不必惊动主公。”詹明笑了一下，那笑容很淡，“往后怕是要辛苦你了。”</p>
+
+        <p>辛夷皱了皱鼻子，眼看着詹明眼中的笑意与焦距都散去了，她握紧了那只早已没了温度的手。</p>
+
+        <p>这时，门被推开了。</p>
+
+        <p>齐临川站在门口，他没让人通报，自己走了进来。</p>
+
+        <p>他的头发已然花白，外袍上带着寒气，肩头也落了雪。</p>
+
+        <p>辛夷这才松开了詹明的手，起身行礼，“主公。”</p>
+
+        <p>齐临川抬手免了她的礼，快步走到床边，低头看着詹明的脸，过了许久，才伸手轻轻替他将双眼合上。</p>
+
+        <p>那动作很轻，仿佛怕惊醒一个睡着的人。</p>
+
+        <p>“无晦他可有说什么……”齐临川的声音很低。</p>
+
+        <p>辛夷答话时，声音有些哑了，“先生说……不必惊动主公。”</p>
+
+        <p>齐临川忽而笑了，“他总是那样。”</p>
+
+        <p>“桑若。”</p>
+
+        <p>“臣在。”</p>
+
+        <p>他看着桑若，缓缓开口，“你要好好活着，别让他操心。”</p>
+
+        <p>“是。”</p>
+
+        <p>齐临川点了点头，转身走了出去，门开的那一瞬间，辛夷听见院子里传来一阵低低的哭声。</p>
+
+        <p>是谁在哭？</p>
+
+        <p>或许不止一个人。</p>
+
+        <p>她站在床边，看着詹明的脸。</p>
+
+        <p>这个人为淮国付出了自己的大半辈子，没有娶妻生子，殚精竭虑一辈子。</p>
+
+        <p>现在他终于能休息了。</p>
+
+        <p>门外传来了脚步声。</p>
+
+        <p>辛夷朝边上站了站，让出去床前的位置。</p>
+
+        <p>齐斐和冯瑛进来了。</p>
+
+        <p>齐斐走到床边，看着詹明。</p>
+
+        <p>他没有说话，缓缓跪了下去，向他磕了一个头，他的额头抵着地面许久才起来。</p>
+
+        <p>辛夷看见他的肩膀在发抖。</p>
+
+        <p>冯瑛看了一眼辛夷，轻轻将她的手握在自己的手里，“桑若，你的手很凉。”</p>
+
+        <p>辛夷这才发觉，自己的手指有些僵了，“我没事。”</p>
+
+        <p>冯瑛叹了一口气，“你自己也要保重。”</p>
+
+        <p>她松开手，跟着齐斐一起出去了。</p>
+
+        <p>而后进来的是齐琅，他站得有些远，只是进来看了一眼詹明最后的样子，许久才到辛夷的跟前。</p>
+
+        <p>“参军大人，先生他……算了，我不问了。”</p>
+
+        <p>辛夷看着齐琅的背影，忍不住出声，“先生他说……当年之事，是他对不住二公子。”</p>
+
+        <p>齐琅的身形一僵，急匆匆地跑了出去。</p>
+
+        <p>郑麟书也来了。</p>
+
+        <p>他向詹明行了个礼，踌躇半晌，只憋出来了一句“节哀”。</p>
+
+        <p>辛夷微微点了点头，“多谢小郑将军。”</p>
+
+        <p>辛夷从屋里出来的时候，院子里站着的人一个也没走。</p>
+
+        <p>“先生他……”</p>
+
+        <p>辛夷只说了这几个字，声音便带了哭腔，她压了一整夜，此刻终于忍不住了。</p>
+
+        <p>院中不少人都哭出了声。</p>
+
+        <p>辛夷站在门口，泪流满面。</p>
+
+        <p>她没有去擦。</p>
+      </div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="texts.html">返回纪闻目录</a>
+    </div>
+
+    <p class="footer-note">四方纪闻 · 归去来</p>
+  </main>
+</body>
+</html>
