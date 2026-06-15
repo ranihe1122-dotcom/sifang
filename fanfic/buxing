@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>不行</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>不行</h1>
+        <p class="page-caption">杂谈</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">詹明 x 辛夷</span>
+        <span class="type-tag">时间线：固元十年</span>
+      </div>
+
+      <h2 class="text-title">不行</h2>
+      <p class="text-subtitle">齐琅x冯瑛</p>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 · 不行</p>
+  </main>
+
+<script>
+  const rawText = `
+
+
+辛夷最近有一件心事。
+詹明二十七岁了，但他还没有娶妻。
+这件事本来跟她没什么关系。
+詹明是主公的亲信。他娶不娶妻，那是他自己的事，轮不到她一个司工参军操心。
+可姜玄老在她耳边念叨。
+“桑若，你说无晦他是不是有什么隐疾？”姜玄端着酒杯，坐在辛夷院子里的石凳上，一脸严肃。
+辛夷正在画图纸，头都没抬。
+“你才有隐疾。”
+“我说真的。”姜玄凑近了一些，“他都二十七了。二十七！正常人他这个年纪，孩子都该会走路了。”
+姜玄喝了一口酒，“你说他为什么不娶？长得也不丑，官做得也不小，主公那么器重他，怎么就没人给他介绍？”
+辛夷停下手中的活，想了想。
+她来淮国两年了，确实没见过詹明跟哪个女子走得近。他每天不是在淮王府就是在世子府。偶尔来她院子里坐坐，看看火，翻翻文书，喝完茶就走。
+从来不带人。也从来没有人来找他。
+“也许只是他不想娶。”辛夷说。
+“为什么不想？”
+“我怎么知道。你那么好奇，你自己去问他。”
+姜玄缩了缩脖子。
+“我不敢。”
+“怂。”
+“你不怂你去。”
+辛夷不说话了。
+她确实也不敢。
+这个话题就此搁置了一段时间。
+但姜玄没有放弃。
+他像一只嗅到了肉骨头的狗，隔三差五就要把这件事翻出来嚼一嚼。
+今天说“听说淮王府有个侍女对无晦有意思”，明天说“工部那个王大人想把自己的女儿说给无晦”。
+辛夷听得耳朵起茧，每次都敷衍地应过去。
+可姜玄说的次数多了，她心里也开始犯嘀咕了。
+詹明为什么不成亲呢？
+她不是没见过詹明对女子的态度。
+有一回在政事堂，户部一个女官来送文书，长得挺好看的，说话也温温柔柔的。詹明接过去，看了一眼，说“放这儿吧”，然后继续看手里的文书，连第二眼都没看。
+那个女官走后，姜玄在旁边叹气：“无晦，你是不是瞎？”
+詹明抬起头：“怎么？”
+“没怎么。”
+还有一回，齐临川设宴，请了好些官员，都带着家眷。
+有个姑娘一直盯着詹明看，詹明浑然不觉。散席的时候，那姑娘的爹来跟詹明寒暄，话里话外都是“我家小女仰慕长史大人已久”。
+詹明听完，点了点头，说了一句“令爱年少有为，往后必然前程似锦”就走了。
+那姑娘的爹脸都绿了。
+姜玄把这件事当笑话讲给辛夷听，辛夷笑了半天。
+笑完之后，她忽然觉得有点不是滋味。
+她说不上来哪里不是滋味。
+也许是觉得詹明这个人太冷了。对谁都客气，对谁都温和，但谁都走不进他那层壳。
+这年冬天，辛夷的院子里多了一坛酒。
+是冯瑛带来的。她说是朔国那边新酿的，烈得很，一般人喝不了。
+辛夷不信邪，打开封泥，倒了三碗。
+“三个碗？”姜玄愣了一下。
+“去叫先生来。”辛夷说，“要三个人喝才热闹。”
+姜玄看了她一眼，咧了咧嘴，去了。
+詹明来的时候，脸上没什么表情。他在石凳上坐下，看了看面前那碗酒，又看了看辛夷。
+“今天什么日子？”他问。
+“不是什么日子。”辛夷说，“就是想喝酒。”
+詹明没有追问。他端起碗，喝了一口。烈酒入喉，他的眉头微微皱了一下，很快又松开了。
+三个人蹲在炉子边，你一碗我一碗，有一搭没一搭地说话。
+姜玄讲校场上的笑话，辛夷讲工部的糗事，詹明偶尔插一句，不咸不淡的，但每次都能把姜玄噎得说不出话。
+酒过三巡，那坛酒见了底。
+辛夷开始觉得天旋地转。
+姜玄也好不到哪里去，抱着酒坛子，嘴里不知道在嘟囔什么。
+詹明喝得最少，但他的耳根也泛了一层薄红。
+“先生。”辛夷忽然开口，“姜玄说你再不娶妻就要孤老终生了。”
+姜玄的酒醒了一半，瞪大眼睛看着她，又看了看詹明，恨不得捂住辛夷的嘴。
+詹明没有看姜玄。他看着辛夷，目光平静。
+“所以呢？”他问。
+辛夷撑着地面站起来，摇摇晃晃地走到詹明面前，蹲下来，仰着脸看他。
+“你为什么不娶妻？”她问。
+姜玄在旁边倒吸了一口凉气。
+詹明没有说话。
+“你是不是……”辛夷歪着头，想了想，“是不是不行？”
+姜玄手里的酒碗差点摔了。
+詹明看着她。那张被酒意熏得通红的脸上，带着一种孩子气的认真。
+“桑若，你喝多了。”詹明说。
+辛夷猛的站了起来，自己把自己绊了一跤，一下子跌进了詹明的怀里。
+詹明顺势将她抱回了屋里，三下五除二给她盖好了被子。
+“别问了，睡吧，你醉了。”
+辛夷还嘟囔了几句，詹明没听清，也没打算听清。
+走时帮她关好了房门，顺带着把倒在地上的姜玄也一并拖了出去。
+娶不娶妻的。
+本就不是什么重要的事。
+
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
