@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>画</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>画</h1>
+        <p class="page-caption">作者：珩光花信</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">詹明x辛夷</span>
+        <span class="type-tag">固元十四年</span>
+      </div>
+
+      <h2 class="text-title">画</h2>
+      <p class="text-subtitle">詹明 x 辛夷</p>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 · 画</p>
+  </main>
+
+<script>
+  const rawText = `
+
+固元十四年，秋。
+淮郡下了整整七天的雨，詹明也罕见的犯了懒。
+他整整三日都没有出门，淮王府的公务堆了半桌子，齐斐新写的两篇策论还等着他批阅，辛夷也托人带话，说是新发明缺了一些材料，请他帮忙从府库中调一些出来。
+还有这许多事没有做，可他却一根手指头都不想动一下。
+这三日，他一直坐在书房听雨喝茶。
+桌上摊着一幅画了一半的山水画。
+那是詹明前几日起的稿，画上的景色是淮郡外的蘅浦，秋日的芦苇荡，水天一色，有几只白鹭立在浅滩上。
+詹明看着那副画，神游天外。
+外面的雨下大了一些，雨声将他的思绪拉了回来。
+他走到桌前拿起笔，蘸了墨，在那幅画上添了几笔。
+添上远处的山影。
+可他还是觉得，这画太空了，空得让人心里发慌。
+再提笔时，他索性画起了雨。
+绵密的雨丝从画幅的上方垂下，像无数根透明的丝线。
+他看了许久，鬼使神差地在那浅滩上画了一个人。
+原本只是个轮廓，而后他画了更多的细节，绿色的衣衫、银白色的长发。
+那人立于雨中没有撑伞，长发被吹散在风中。
+詹明没有画脸，但他自己清楚，画上的这个人是辛夷。
+窗外的雨不知什么时候变小了。
+詹明放下了笔，推开了窗。
+冷风裹着湿气涌了进来，他深深地吸了一口气，空气之中有泥土的腥，还有枯叶的涩味。
+雨下了这么多日，他院中那口水井沿上积了一层青苔。
+他忽然想起，辛夷的院子里从前没有井。
+辛夷每回用水，都要去淮王府的东南角那口大井里挑。
+这事是姜玄那次喝醉了酒时同他说的，“桑若那个人也不使唤下人，就自己一个人过去打水，还说这也是修行的一种，她也是犟。”
+隔日，詹明便禀了齐临川，得了许可后便派人在辛夷的院子里打了一口井。
+辛夷看见了那口井便跑来长史院问他，“先生，那口井是你让人打的？”
+詹明摇了摇头，“不是我。”
+“可我听说——”
+詹明放下了手里的书，神色如常地看着她，“这是主公的安排。”
+辛夷没再问便走了，但她大概也没全信。
+詹明回到桌前，看着那副画，只觉得她一人在雨中太过孤单，便又提笔在她身后加上了一个没有脸的自己。
+画中二人在雨里一前一后的走着，分明隔得不远，却像隔了一整条河。
+他忽然觉得心里有些发紧。
+随后，他又拿起笔。
+这次他画的是姜玄。
+姜玄站在更远的地方，一手拿着酒壶，怀里抱着伞，朝他们二人跑来，像是来给他们送伞。
+画完姜玄之后，这幅画才算完整。
+他叫人将画挂了起来，挂在书房最显眼的地方，而后他拿起一本公文。
+闲了这三日，他也该动一动了。
+夜里齐斐来长史院时，一眼就看见了那副画。
+“这是先生的新作？”
+“随手涂鸦罢了。”詹明说着，便将那两篇批改好的策论递给了齐斐。
+齐斐低头接过策论，“先生与二位参军大人同僚之谊，学生实觉羡慕。”
+同僚之谊。
+不错。
+他们三人的同僚之谊，值得他作此画。
+而他作画，也只是因为同僚之谊。
+不为其他。
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
