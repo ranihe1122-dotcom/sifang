@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>80秀</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>80秀</h1>
+        <p class="page-caption">作者：絮芽、珩光花信</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">all冯瑛</span>
+        <span class="type-tag">时间线：固元十三年</span>
+      </div>
+
+      <h2 class="text-title">80秀</h2>
+      <p class="text-subtitle">all x 冯瑛</p>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 · 80秀</p>
+  </main>
+
+<script>
+  const rawText = `
+固元十三年寒露，公子书斋。
+冯瑛刚从辛夷那儿出来，想着把剩下的糕点给齐斐和齐琅送去。
+还未走近书斋，詹明清冽的声音便传了出来。
+“‌书曰弑，其罪在谁？书曰会，其心在何？若天子有名而无令，诸侯奉诏而自专，又当如何记之？”
+屋内的人似是注意到了冯瑛的到来，詹明拿着《春秋》的手顿了顿。
+“先休息一会儿吧。”
+“可有打扰长史大人授课？”，冯瑛从外面探出半张脸，“我带了缘会楼的糕点。”
+詹明抬眼，淡淡道，“无妨，世子夫人请自便。”
+冯瑛提着食盒跨过门槛，慎胤秀跟在她身后，也走了进来。
+平日里他都是在门外等的，今日不知为什么跟了进来。也许是因为书斋里坐着的两位公子，让他不太放心。
+书斋不大，北面是一整面墙的书架，南窗下摆着两张书案，齐斐坐东首，齐琅坐西首，中间隔了一条不宽不窄的过道。
+詹明坐在上首，面前摊着一本翻到一半的《春秋》。
+“这是缘会楼的冰豆花，算是淮郡的特产，我平日里常吃。”冯瑛从食盒里拿出一碗点缀着马蹄和茉莉的冰豆花，“辛夷不愿意尝，便宜你们啦。”
+慎胤秀见状，也上前帮着把食盒里的糕点一碟一碟地拿出来。梅花糕、桂花酥、莲子饼、枣泥卷……摆了小半张书案。
+“还有这些”，冯瑛指着慎胤秀拿出来的一大堆糕点，“我不太清楚你们的口味，便随意买了些。”
+“多谢大嫂。”齐琅道。
+也只有他注意到，他这位兄长趁着慎胤秀低头拿糕点的时候，已经不动声色地将那碗冰豆花拿到了自己面前。
+齐斐用勺子拨弄着碗里的马蹄，笑着开口，“瑛娘的口味倒与我颇为相似。我幼时也爱吃这冰豆花。”
+齐琅看着齐斐眯着眼睛笑的表情，有些语塞。
+齐斐幼时何曾吃过什么冰豆花，不过是做给自己看的。
+只是当着众人的面，他也不好说什么，只能默默拿走了一块“随便买的糕点”，一言不发地啃了起来。
+“瑛娘自己不吃一些吗？”齐斐依旧笑眯眯地。
+“我在缘会楼就和阿秀吃过热乎的啦。”看这兄弟俩吃得香，冯瑛脸上也沾了一抹喜色。
+话音落下，书斋里的空气忽然变了。
+齐斐握着勺子的手停在半空，脸上的笑容没有消失，但僵了一瞬。
+齐琅咬了一半的枣泥糕含在嘴里，忘了嚼。
+两个人几乎同时抬起眼睛，对视了一眼。
+那一眼很短，但有一种说不清的、像是领地被入侵了的不快。
+这兄弟俩的脸上，竟少见地露出了相似的表情。
+好像只有在这种时候，他们才像一对真正的一母同胞的兄弟。
+齐斐放下勺子，脸上那层僵了一瞬的笑容重新舒展开。刚才那阴鸷的表情好像只在齐斐脸上停留了一秒，便被他一贯的儒雅淡然挤走了。
+“瑛娘来得巧，不如留下一起听先生讲课如何？”
+他顿了顿，目光移到站在冯瑛身后的慎胤秀身上，睫毛轻轻垂了一下。
+“慎侍卫……也要来吗？”
+慎胤秀没有回话，他站在那里，像一根不会动的柱子。
+但他没有走，这在齐斐看来，本身就是一种回答。
+齐琅幽幽开口了。
+“莫非慎侍卫也懂《春秋》吗，莫非在朔国连侍卫也能读书？”
+“二弟，不可以出身论人。”齐斐说着呵斥的话，语气却淡淡的。他说完这句，又转向慎胤秀。
+“听闻慎侍卫在朔方时同瑛娘一同长大，相必也和瑛娘一样，学过不少经史，读过不少兵略吧？”
+	话至此处，屋内像落了一层霜，再无人说话。
+詹明坐在上首，自始至终没有参与。他翻了一页书，纸页的声音在寂静中被放大了好几倍，像一声轻叹。
+慎胤秀站在那里，被两位公子的目光夹在中间。
+齐斐的目光是温的，像一杯放凉了的茶，但你喝下去才知道底下是烫的。
+齐琅的目光是冷的，冷得像冬天井沿上的霜，碰一下就刺骨。
+两条蛇。
+这是慎胤秀此刻脑子里冒出来的念头。
+两条本该在阴湿墙根下蛰伏的蛇，偏偏披上了龙的衣服。平日里道貌岸然，温文尔雅，可此刻眼里透出的那点阴冷，像鳞片缝隙里漏出来的光，暴露了底下的东西。
+他忽然觉得，这两位公子的五官，在这一刻变得格外相像。
+像到有些毛骨悚然。
+冯瑛见气氛不对，也便开口，“阿秀，你把剩下的那盒梅花糕带给姜大人吧，我就不与你同去了。”
+“是，小姐。”虽然知道冯瑛是要把他支开，但他脸上的表情也还是缓和了不少，像一只警觉的猫鼬被捋顺了毛。
+慎胤秀从书斋里出来，外面不知何时起了风，他下意识伸出手，却不知自己在为谁挡风。
+他听见书斋的门合上的声音，又听见屋内传来的笑声与读书声，有些刺耳，他没有回头，只是加快了脚步。
+书斋散学后，齐斐本要留她一起用饭，冯瑛推说还有事要去找辛夷，便匆匆离开了。
+她没有去司工署，而是回了自己的院子。
+“阿秀？”
+冯瑛一进院子，就着急的喊慎胤秀。
+慎胤秀慢慢从暗处走了出来，确保她身后没有其他人，才唤了她一声，“阿瑛，我在这里。”
+“你还没用晚膳吧？”她问。
+慎胤秀摇了摇头。
+“我去小厨房给你煮碗面。”
+“不必了。”慎胤秀拦住了她，“阿瑛，别忙了，我不饿。”
+“阿秀，”冯瑛放轻了声音，“进来坐坐吧。”
+慎胤秀犹豫了一下，抬脚跟着她进了屋。
+冯瑛在桌边坐下，倒了两杯茶。
+她端起自己那杯喝了一口，见慎胤秀还站着，用手指敲了敲桌面。
+“站了一整天了，不累？”
+慎胤秀在她对面坐下，没动那杯茶，也没说话。
+冯瑛轻轻叹了一口气，“今天你受委屈了。”
+“不委屈，是我应该做的。”
+慎胤秀就是这样的人。
+他从小服侍冯氏一族，把“应该”两个字刻进了骨头里。
+纵然冯瑛说再多，他也改不了。
+她只是伸出手，覆在他放在膝盖的手背上。
+他的手指又凉又僵，像五根被冻住的树枝。
+“阿秀，”她说，“今天的事，我会跟世子殿下说的。他不是针对你，他只是——”
+“不必替他解释。”慎胤秀打断了她，声音比刚才硬了一些，“世子殿下没有错，二公子也没有错。下回阿瑛再去送糕点，我会乖乖站在门外，不进去就没事了。”
+冯瑛听着这话，心里像被人拧了一下。
+她站起来，轻轻抱住了慎胤秀。
+慎胤秀的手握紧成了拳，“阿瑛，我只是个侍卫，你我之间很不该如此。”
+“阿秀，你是这淮国地界里，唯一一个知晓我的过往、见过我所有样子的人。”冯瑛抱得更紧了一点，“我不许你这样轻贱自己，听明白了吗？”
+“遵命。”
+
+
+
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
