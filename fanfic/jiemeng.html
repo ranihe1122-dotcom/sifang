@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>解梦</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>解梦</h1>
+        <p class="page-caption">作者：苦茶子、冰豆花</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">无cp</span>
+        <span class="type-tag">普通的一天</span>
+      </div>
+
+      <h2 class="text-title">解梦</h2>
+      <p class="text-subtitle">无cp</p>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 ·解梦</p>
+  </main>
+
+<script>
+  const rawText = `
+
+最近辛夷开始解梦。
+倒不是心血来潮。她出身烛山，烛山的部族代代相传着一套解梦的法子，她小时候学过一些，后来入了淮国渐渐就生疏了。
+前阵子她翻了几本从老家带出来的旧手札，才发觉自己荒废已久。
+于是，辛夷拍着桌子宣布，“从今天起，大家有梦都可以来找我解。免费。”
+姜玄第一个捧场。
+他听见消息之后，顶着两个黑眼圈就来了。
+“桑若，昨晚我做了个梦，我梦见……”姜玄压低了声音，“我在找茅厕。找了好半天，好不容易找到了，但是——”
+“行了。”辛夷抬手打断他，面无表情，“你昨晚起夜了吧。”
+姜玄一愣，“你怎么知道？”
+“每个人睡前水喝多了都会做这种梦，这是常识。”辛夷端起茶盏，“子墨，你下次睡前少喝酒。”
+第二个来的是郑麟书。
+他进门之后先探头看了看院子里有没有其他人，确认只有辛夷一个人在炉子边打铁，才磨磨蹭蹭地走过来。
+“辛夷大人，我听说您解梦。”
+“小郑将军？”辛夷放下锤子，擦了擦手，而后指了指石凳，“坐，和我说说做了什么梦？”
+郑麟书坐下，两只手放在膝盖上，像学生在老师面前一样端坐着。
+“我梦见……我和一个姑娘，在一个很小的屋子里。”
+“嗯。”
+“那个姑娘穿着绿衣裳，她的脸……我看不清。”
+“嗯嗯。”
+“我们就在那个屋子里待着。没了。”
+辛夷沉默片刻，缓缓开口，“小郑将军，这个梦……我也不太清楚。你还是另请高明吧。”
+“好，那我先告辞了。”
+郑麟书舒出了一口气，走出去的时候还差点被门槛绊了一跤。
+辛夷看着他的背影，小声嘟囔了一句，“小郑将军竟然也做春梦，这是想成家了啊。”
+叶栖迟来的时候，辛夷正准备吃午饭。
+“桑若。”叶栖迟站在院门口，手里没提酒，也没带点心，只是穿了一件月白色的长衫，头发半束半散，像是从茶楼直接过来的。
+“叶老板？你也来解梦？”
+“怎么，不行？”叶栖迟走进来，在石凳上坐下，姿态闲散得像在自己家。
+“当然行。”辛夷把粥碗推到一边，“什么梦？”
+“我梦见……掀盖头。”
+辛夷眨了眨眼，“谁的盖头？”
+“一个女人的。”叶栖迟的语气很平静。
+“脸看清楚了吗？”
+“看清楚了。”
+辛夷盯着她看了几秒。
+“叶老板，”辛夷斟酌了一下用词，“你有些看不懂她，所以有些不安。”
+叶栖迟没有打断。
+“你想和她有稳定的关系，”辛夷的声音放轻了些，“但你现在不懂她，也不知道她愿不愿意。”
+“竟然是这样……”
+“是这样。”辛夷说，“烛山解梦不说虚的。梦里的盖头，是你自己给这段关系蒙上的布。你想掀开，又怕掀开之后看到的不是你想的样子。”
+叶栖迟忽然笑了，像是被什么东西戳中了，有点无奈又有点释然的笑了起来。
+“解梦这东西可真是有些说法。”
+冯瑛是下午来的。
+她进门的时候，慎胤秀照例守在院门外。
+辛夷招呼了一声，“慎护卫也进来坐”，慎胤秀只是摇了摇头，纹丝不动。
+冯瑛没有管这些，在辛夷对面坐下，“桑若，我听说你最近在解梦？”
+“对。”辛夷眼睛一亮，“令仪你也做梦了？什么梦？”
+冯瑛顿了顿，犹豫了片刻才说。
+“我梦见……我和一个人，走在很长的楼梯上。楼梯很黑，没有灯，我看不太清路。那个人牵着我的手，一步一步往下走。”
+“然后呢？”
+“然后一直走。”冯瑛说，“梦就醒了。”
+辛夷忽然凑近了她一些，压低声音，“令仪，你这是春梦。”
+冯瑛怔了一下，耳根慢慢红了。
+“春……？”
+“嘘！”辛夷竖起一根手指，左右看了看，才又凑了过去问她，“你跟谁牵的手？那人的脸你看清了吗？”
+冯瑛垂下眼，声音很轻，“没有。太黑了，看不清。”
+辛夷盯着她看了两秒，忽然笑了，没有追问什么，只是说，“看不清也没关系。等看清了，你记得告诉我。”
+冯瑛没接话，耳根的红色却蔓延到了脸颊。
+就在这时，齐斐来了。
+辛夷起身行了个礼，齐斐还了礼，他的目光在冯瑛身上停了一瞬，又移开了。
+“我路过，听说参军大人会解梦。”
+“世子殿下做了什么梦？”
+齐斐沉默了一会儿，看着冯瑛说，“我梦见替她披衣。”
+冯瑛端茶的手微微一顿。
+“我看她站在风口，衣裳单薄，就拿了披风过去，想给她披上。但是那衣带怎么都系不紧。我越急越系不上，最后她叹了口气，自己把披风拉紧了。”
+辛夷难得安静了一会儿。
+“殿下，这个梦的意思是——您想成为她的依靠，却怕她不愿依靠您。”
+齐斐没有否认。
+辛夷想了想，又说，“殿下，纵然公务繁忙，也可以找夫人说说话。排解排解。”
+齐斐听后侧过头，看了冯瑛一眼。
+冯瑛笑着迎上他的目光，“世子殿下，我最近没什么事。”
+齐斐的嘴角微微动了一下，“那明日，我们……”
+“参军大人——”
+齐斐的话还没说完就被打断，有些不悦，他朝院门口看去。
+是齐琅来了。
+齐琅进门的时候，看了一眼齐斐，没跟他打招呼，转头对着冯瑛喊了一声“大嫂”，语气是那种刻意的、带着点少年气的热络。
+等冯瑛应了之后，他才喊了齐斐一声，也不等齐斐说什么，便又朝着辛夷，“参军大人，我也做了个梦。请您帮我解解。”
+辛夷招呼他坐下。
+“二公子梦见什么了？”
+“迷宫。”齐琅说，“我一直走，却一直走不到头。每条路都一样，绕来绕去，最后还是回到原地。我拼命跑，可就是到不了我想去的地方。”
+辛夷的神情有些复杂，但还是说，“二公子，您或许是没休息好。放松放松，心里头得放下些事情。”
+她顿了顿，又轻声补了一句，“也要放下一些人。”
+齐琅的笑容僵了一瞬。
+随后他站起来，拱了拱手，“多谢参军大人指点，只是……有些人没那么容易放下。”
+齐斐微微挑了挑眉，“二弟，前些天先生布置的课业你写的如何了？”
+“已经写完了，在交给先生之前，还想着要让大哥指点一二。”
+“今日凑巧，我便随你一同去吧。参军大人，我们先告辞了。”
+辛夷看着这两兄弟的背影，忍不住叹了一口气。
+冯瑛等两个人走远了，这才走到院门口，拉着慎胤秀的手往里走。
+“阿秀你也跟桑若说说你的梦，让她帮你看看。”
+慎胤秀看着冯瑛脸上期许的表情，缓缓开口。
+“我梦见我回了朔国，在家门口。”他说，声音很低，“但是我进不去。门锁着，怎么都打不开。”
+“慎护卫，”辛夷的声音比平时轻了一些，“你这是想家了。”
+慎胤秀没说话。
+“不如，改天我去问问主公，能不能让你回家看看。”
+慎胤秀垂着眼，摇了摇头，“不用了，多谢大人好意。”
+他转身走出院子，重新站到院门外，那个属于他的位置。
+最后一个来的是詹明。
+他来的时候，辛夷刚泡好一壶茶。
+“先生？”辛夷有些意外，“您也做梦了？”
+詹明在石凳上坐下，神情平静。
+“桑若，我梦见了一个棺椁。”
+辛夷的手顿住了。
+“棺椁停放在灵堂里，只是不知是何人的棺椁，也不知是何人的灵堂。”
+院子里安静得只剩下炉火的噼啪声。
+良久，辛夷深吸一口气，挤出一个笑容。
+“先生，这是个吉兆。”
+詹明看着她，等她说下去。
+“梦里的东西，很多都是相反的，您梦见灵堂，那就说明您一定能长命百岁。”
+詹明微微阖上了眼睛，过了一会儿才睁开。
+“多谢你，桑若。”他说，“那我先走了。”
+她看着詹明的背影远去，低头喝了一口手里的茶。
+是冯瑛之前带来的茶。
+她说这茶好喝，能品出甜味。
+辛夷却觉得有些苦。
+
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
