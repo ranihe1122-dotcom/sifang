@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>辛夷的一天</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>辛夷的一天</h1>
+        <p class="page-caption">作者：珩光花信</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">all辛夷</span>
+        <span class="type-tag">普通的一天</span>
+      </div>
+
+      <h2 class="text-title">辛夷的一天</h2>
+      <p class="text-subtitle">all x 辛夷</p>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 · 辛夷的一天</p>
+  </main>
+
+<script>
+  const rawText = `
+
+
+辰时。
+辛夷的院子里响起了叮叮当当的声音。
+“又砸什么呢？”
+姜玄不知什么时候来了，手里拎着半壶酒，靠在院门口，眯着眼往里瞧。
+辛夷没理他，把烧红的铁条从炉子里抽出来，一锤一锤地砸下去。
+“这是个什么东西？”
+姜玄凑近了看，地上摆着一堆零碎。铁片、齿轮、弹簧，还有一个半成品的铁匣子。
+辛夷把锤子往水桶里一扔，嗤地冒起一股白烟，“装在马车上用的。山路颠簸的时候，能减震。”
+姜玄点了点头，席地而坐，喝了一大口酒。
+“子墨，那么早就喝酒你也不怕醉了？”
+姜玄笑了一声，“我心里有数，醉了还要被无晦说教，我可不敢醉。”
+“又说我什么呢？”詹明的声音从院外传进来，不紧不慢的。
+姜玄咳了一声，酒差点呛着。
+詹明在院里的石凳上坐下，把文书摊开来看。
+辛夷看着这两个人，忍不住问，“你们都坐在这干什么？”
+“我是来等点心吃的。”姜玄咧着嘴，“我看夫人出门了，她回来准给你带点心。”
+辛夷爱吃龙井茶酥，但自己身为人臣，不能日日出门享乐，冯瑛知道她喜欢，也便在每次出门的时候特意去一趟缘会楼，打包一点过来给她解馋。
+辛夷被他这一说，又想起了龙井茶酥的味道，忍不住咽了咽口水，手歪了一寸。
+“糟了。”她看了看那道砸偏的印子，皱起眉。
+詹明抬了抬眼皮，“这是惦记茶酥还是惦记人？”
+“惦记茶酥。”辛夷诚实地说。
+巳时。
+姜玄说要去躺会儿，就自己去了厢房，院子里就剩了詹明一个人。
+这时，辛夷的院门外传来了一阵急促的脚步声。
+“辛夷大人——”郑麟书跑了进来，他大约是刚从演武场回来，连甲胄都未来得及脱下，“我顺路来拿药。”
+一进来看见詹明坐在那里，便行了个礼。
+“长史大人也在。”
+詹明起身回了礼。
+“小郑将军好。”
+将军府跟淮王府隔着好几条街，本就没有顺路一说，不过詹明也懒得说出来，下人家的面子可不好。
+“小郑将军来拿药啊！”辛夷从炉子后面探出头，“我这就去给你拿，你稍等。先生，帮我看着火。”
+辛夷跑进了里屋，郑麟书看着放下文书专心看炉子的詹明，心里不由得有些焦躁。
+“长史大人常来辛夷大人这里？”
+詹明看了他一眼，“这与小郑将军无关吧。”
+郑麟书被噎了一下，他知道詹明是辛夷的举荐人，也知道他们私下关系好，可他就是有些害怕。
+“可长史大人与辛夷大人到底是男女有别，被别人看见要是误会了可不好。”
+詹明的眸光暗了暗，正要说什么，辛夷已经拿好药出来了。
+她将两个青瓷小瓶放到了郑麟书的手里，“这个绿的，外敷，撒在伤口上。这个白的，内服，一日三次，每次一颗。这两个可别搞混了。”
+辛夷说完又顺手拍了拍他胳膊上的甲片，“你身上这甲该保养了，哪天脱下拿来给我帮你紧一紧。”
+郑麟书一下子就红了脸，微微后退了一步，应了一声“好”。
+詹明看着他的样子，嘴角微微动了动，满脸写着“我好像知道怎么回事了”看着郑麟书。
+辛夷走回炉子前看了一眼，“先生，我不是让你给我看看火吗，这火都要灭了，怎么不给我添点柴火。”
+詹明还没来得及帮忙，郑麟书便先他一步把柴扔进了炉子里，他见状也便坐回石凳上接着看手里的文书。
+辛夷看他扔了太多，立即伸手拦了他，“多谢小郑将军，我自己来就好。”
+郑麟书的手顿了顿，“那我就先告辞了。”
+他正要走，却又忍不住问詹明，“长史大人今日来是有公事？”
+“是。”
+郑麟书咬了咬牙，又问，“什么公事？”
+詹明放下文书，看着郑麟书，目光里带着一种看透了但懒得拆穿的疲倦，“小郑将军，你是在审我？”
+“末将不敢。”
+“小郑将军有这些功夫，不如多练练枪法，詹某听闻蘅浦有一位新出之秀，舞得一手好枪，小郑将军当心别被比了下去。”詹明说。
+“竟有此事！”郑麟书一惊，立刻跑出了院子，要去打听那是什么人。
+詹明看着郑麟书离开的背影，忍不住叹了一口气，小声嘀咕了一句，“小孩子就是黏人。”
+辛夷又抬起头，“你们刚才嘀嘀咕咕说什么呢？”
+“没什么。”
+“没背着我说我什么坏话就行。”
+未时。
+冯瑛果然从缘会楼打包了龙井茶酥过来。
+她手里提着一个食盒，身后没有跟侍女。慎胤秀远远地站在院门外，像一尊门神。
+冯瑛进了院子才发现詹明和姜玄也在。
+“不知二位大人也在，我买少了。”
+“不妨事、不妨事！”姜玄说着就要去接她手里的食盒，却被冯瑛不着痕迹地躲了过去。
+下人泡好了茶，辛夷见状，立刻扔了手套，洗好手坐下。
+冯瑛这才将食盒打开，拿出了里面的龙井茶酥。
+辛夷毫不客气地拿了一块，咬了一口又喝了一口茶，一股清甜的茶香混着酥油的暖意在嘴里化开。
+“不愧是缘会楼的手笔，好吃！”
+姜玄这才伸手去拿，又随口问了一句，“夫人是一个人去的？”
+“半路上遇到二公子，就一起去了。”
+“那二公子怎么没来？”
+“二公子去了军营里，许是还有军务吧。”
+詹明抬了抬眉毛，“夫人跟二公子倒是亲近。”
+冯瑛自然听出詹明话中深意，并没有说什么，只是喝了一口茶，而后微微皱了皱眉，“这茶怎么能那么苦，没有甜的吗？”
+“不苦啊。”辛夷眨了眨眼，“要喝甜水的话你下次自己带点来。”
+辛夷吃了第二块，忽然想起什么，歪头看了看冯瑛，“你吃了没？”
+“我在缘会楼吃了，跟阿秀一起吃的。”冯瑛笑了笑。
+“那慎护卫喜欢吃吗？”
+冯瑛摇了摇头，“阿秀说他吃不习惯这个。”
+“慎护卫可真是没口福！”姜玄一边说着，嘴角还沾了酥皮的碎屑，却浑然不觉。
+詹明也拿了一块，尝了一口，点了点头，“缘会楼的手艺确实不错。”
+慎胤秀站在院门外，听着里面的声响，微微侧了侧头，似乎想看一眼，又忍住了。
+辛夷吃了第四块，终于心满意足地拍了拍手，把指尖的酥皮碎屑吹掉，感慨道，“若是每天都能吃上缘会楼的茶酥，我这辈子就不求别的了。”
+姜玄撇了撇嘴，“那你这辈子也太便宜了。”
+辛夷不理他，又转向冯瑛，“令仪，你下次什么时候出门？”
+冯瑛想了想，“后日吧。你想吃什么？”
+“还是这个。”
+“好。”
+姜玄在旁边插嘴，“夫人，能不能也帮我带一份？”
+冯瑛笑了笑，掌心向上，朝他伸出了手，“那姜大人先给钱。”
+詹明端起茶盏，遮住了上扬的嘴角。
+申时。
+点心吃完了，姜玄正想溜，却被辛夷抓住。
+“来都来了，四个人正好能打麻将。”
+“桑若，你这是坑我呢！明明知道我手气臭——”
+詹明看了一眼坐在一边的冯瑛，“夫人会打吗？”
+“桑若上回教过我，就是我出牌有些慢。”
+辛夷喊了下人去准备麻将桌，又看了一眼院外，“慎护卫还在啊，要不然让他进来坐？”
+“没事，阿秀说那样他比较自在，不用管他。”
+第一圈，姜玄没吃没碰，手里全是散牌。第二圈，他摸了一张，又打出一张，脸色越来越苦。
+詹明慢条斯理地碰了一对，又摸了一张，把牌一推，“胡了。”
+姜玄咬牙，“再来。”
+第二把，姜玄的手气更差。
+他摸了半天，手里还是一堆散牌，眼睁睁看着辛夷碰了一对又杠了一个。
+“杠！”辛夷兴奋地拍桌子，“再摸一张！”
+她伸手一摸，眼睛亮了，“杠上开花！”
+姜玄脸都绿了，“你是不是作弊？”
+“你坐我旁边，我怎么作弊？”
+第三把，姜玄终于摸了一手好牌，他嘴角微微上扬。
+冯瑛笑着问，“姜大人这次不错？”
+“还行。”姜玄故作淡定。
+可他一连打出去三张牌，都没摸到想要的。
+辛夷又碰了一对，詹明又杠了一次，姜玄的好牌硬生生被卡死在手里。
+最后是冯瑛小声说了一句，“我好像胡了。”
+姜玄立刻凑过去看她的牌，结果发现不是诈胡，气的拍了一把桌子，“我还没胡过一把！”
+詹明悠悠地说了一句，“子墨，你今天手气格外差。”
+“不用你说！”姜玄气呼呼地洗牌。
+第四把，第五把，第六把……
+姜玄每输一把就灌一口酒，灌到后来，连牌都拿不稳了。
+“八万……还是九条……算了随便吧。”
+“胡。”詹明面无表情地把牌推倒。
+“你怎么又胡了？！”姜玄瞪大了眼睛。
+“你点的炮。”
+眼看着姜玄快把自己的俸禄输光了，辛夷这才收手，又去院子里继续打早上没打完的铁。
+酉时。
+姜玄和詹明也走了，一个回去写公文，一个回去喝酒。
+冯瑛没走，就坐在院子里看辛夷打铁。
+“不嫌吵吗？”辛夷问。
+“还好。”冯瑛说，“在朔国的时候，大哥偶尔也会带我去铁匠铺。”
+辛夷把最后一道工序做完，把那枚齿轮装进铁匣子里，拧紧螺丝，拍了拍手上的灰，“成了。”
+“这是什么？”冯瑛凑过来看。
+“减震器。”辛夷把它翻过来，露出底部的卡槽，“装在马车轮轴上的。下次你坐马车出门，装上这个，就不会被颠得难受了。”
+“你怎么什么都会。”
+“那是。”辛夷也不谦虚，把铁匣子包好，塞给冯瑛，“这个送你。你院子里那辆马车，我量过了，能装。”
+冯瑛抱着那个沉甸甸的铁匣子，低头看了看，忽然轻声说了一句什么。
+辛夷没听清，“嗯？”
+“没什么。”冯瑛抬起头笑了笑，“谢谢你，桑若。”
+“别谢，下次多带两块茶酥就行。”
+炉火映着两个人的影子，在墙上晃了晃。
+天色渐渐暗了。
+辛夷送走冯瑛，回头看见桌上那个食盒，里面还有两块龙井茶酥。
+她想了想，把食盒收了起来。
+明天再吃。
+
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
