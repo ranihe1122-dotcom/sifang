@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>夕照何人</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>夕照何人</h1>
+        <p class="page-caption">杂谈</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">齐琅 x 冯瑛</span>
+        <span class="type-tag">时间线：固元十四年</span>
+      </div>
+
+      <h2 class="text-title">夕照何人</h2>
+      <p class="text-subtitle">齐琅x冯瑛</p>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 · 夕照何人</p>
+  </main>
+
+<script>
+  const rawText = `
+
+固元十四年，深秋。
+齐琅来詹明书房交策论，交了没走，站在棋盘边上看了一会儿。
+詹明正在复盘前几日和齐斐的对局，黑白子散了一盘，还没收拾。
+“这里，”齐琅忽然伸手指了一个位置，“下在这里，白棋就活了。”
+詹明有些意外地抬起头，却发现齐琅的目光已经不在棋盘上了。
+他望着窗边，窗边只有一盆兰草。
+那是冯瑛前几日让人送来的，说是分株多出来一盆，放在詹明书房里，替他添些文气。
+詹明没有多想，收下了。
+可齐琅看那盆花的眼神，让詹明心里忽然咯噔了一下。
+那不是看一盆花该有的眼神。
+他没有立刻说话，只是低下头，把棋子一颗一颗捡回棋盒里。
+“二公子，策论我明日改好让人送你院里去。”
+“有劳先生。”齐琅收回目光，也没行礼便转身走了。
+詹明放下手里的棋子，靠在椅背上，闭了一会儿眼睛。
+他的心里出现了一个他不愿意面对的答案。
+窗外起了风，把那盆兰草的叶子吹得沙沙响。
+过了几日，詹明把齐琅叫到了书房。
+“先生找我有事？”
+“嗯。”詹明放下手里的文书，看着他，“你今年多大了？”
+齐琅愣了一下，大概没想到他会问这个。
+“我与大哥同年同月同日生，自然与大哥同岁。”
+“你二十四岁了，该娶妻了。”
+齐琅的表情没变，但手指在扶手上轻轻敲了一下。
+“先生怎么突然想起这个？”
+詹明端起茶盏，“早就该提了。你兄长二十岁成的亲，你拖到如今，已经晚了。”
+齐琅没有说话。
+詹明放下茶碗，从一叠纸里抽出一张，放到齐琅面前。纸上写着几个名字，都是淮郡世家的女儿，旁边用小字注了年龄、家世、品性。
+“你看看，若是有中意的——”
+“先生。”齐琅打断了他，“我不想娶。”
+詹明没有追问为什么，只是看着他。
+那目光很平，平得像一面没有风的湖。但齐琅知道，那下面是深不见底的水。
+“二公子，”詹明开口，声音不高不低，“你心里有人。”
+齐琅的手指顿住了。
+书房里安静了一瞬。窗外起了风，吹得窗棂吱呀响了一声。
+“没有。”齐琅说。
+詹明没有拆穿他。
+他站起来，走到窗前，背对着齐琅，看着窗外那片灰蒙蒙的天。
+“二公子，有些事，放下就好。”他的声音很轻，“放下了，就还是自己的事。可若是一直抓着不放，迟早会变成别人的事。”
+齐琅没有说话。
+“世子殿下待你不薄。”詹明转过身来，“夫人也敬你。这份敬重，你可受得起？”
+齐琅的脸色终于变了。
+他猛地站起来，椅子往后一推，发出一声刺耳的响。
+“先生到底想说什么？”
+詹明看着他，目光平静。
+“詹某只是觉得，你该成家了。”
+他走回书案前，把那写满名字的纸又往齐琅面前推了推。
+“你拿回去看看。不必急着答应，先见一见再说。”
+齐琅低头看着那张纸，没有伸手去接。
+“我不娶。”他说。
+“你可以不娶。”詹明把纸推近了一些，“但你得想清楚，你不娶，是因为不想娶，还是因为娶不了你想娶的人。”
+齐琅的呼吸重了几分。
+他站在那里，像一棵被风吹得快要折断的树，却怎么也不肯倒。
+詹明没有再说话。他坐回椅子上，拿起文书，继续看。
+过了很久，齐琅伸出手，把那张纸拿了起来。
+他没有看，只是攥在手里，攥得纸都皱了。
+然后他转过身，走了出去。
+门关上的时候，詹明放下了文书。
+他看着那扇关上的门，沉默了很久。
+他知道齐琅心里苦。
+可有些苦，只能自己咽下去。别人帮不了
+事情是在半个月后发生的。
+那天世子府有宴，齐琅喝了不少酒。
+宴席设在世子府的正厅，来的都是淮郡的官员和家眷。
+齐琅坐在齐斐下首，一杯接一杯地喝。
+齐斐注意到他喝得太多，低声提醒他，“二弟，少喝些。”
+齐琅看了他一眼，那眼神有些恍惚，像是没认出来他是谁，又像是认出来了但不想理。他没有回答，又给自己倒了一杯。
+冯瑛坐在齐斐身侧看向齐琅。
+她注意到他的手指在发抖，酒杯里的酒洒了一些出来，落在桌面上，洇开一个小小的深色的圆。
+她想说点什么，可齐琅别过了脸。
+宴席散的时候，已经过了亥时。
+齐琅推开要扶他的侍从，自己踉踉跄跄地往外走。
+夜风一吹，酒意涌上来，他扶着回廊的柱子站了一会儿，胃里翻涌，却什么也吐不出来。
+他抬起头，月亮很圆，挂在屋檐的一角，冷冷地照着。
+他忽然想走一走。
+不知道走了多久，也不知道走到了哪里。等他回过神来的时候，他站在一个院门口。
+他认得这里。
+这是冯瑛的院子。
+院门没有关严，留着一道缝，里面有灯光透出来，暖黄色的，在深秋的夜里显得格外安静。
+齐琅站在门口，手扶着门框，没有动。
+他想起自己第一次见冯瑛的那天。
+固元十年，她嫁来淮国。他随齐斐一同站在城门口等待。
+马车停稳后，按礼该由世子迎亲，但齐斐没动，他只能替哥哥走上前去掀开帘子。
+冯瑛搭着他的手臂下车时，低声说了一声“有劳”。
+风吹起了盖头，他看了她一眼。
+只一眼。
+他的心就乱了。
+从那天起，他做了很多不该做的事。
+送脂粉，送首饰，找各种借口去世子府。
+明明知道不该去，却怎么也停不下来。
+如今，他又站在了这里。
+最终，他还是推开了门。
+正房的门虚掩着，里面有灯光透出来。
+侍女听见动静，从耳房里探出头来，看见是他，吓了一跳。
+“二公子？您怎么……”
+齐琅没有理她，径直往里走。
+侍女慌了，小跑着上前拦住他，“二公子，夫人已经歇下了，您明日再来吧！”
+齐琅推开她，推开了正房的门。
+冯瑛还没有睡。
+她坐在灯下，手里拿着一本书，听见门响抬起头，看见是齐琅，愣了一下。
+她今天穿了一件月白色的寝衣，头发散着，没有梳妆，素面朝天。
+齐琅站在门口，看着她的样子，忽然觉得自己快要喘不过气来了。
+“二公子？”冯瑛放下书，站起来，眉心微微蹙着，“你怎么来了？”
+齐琅没有说话。
+他往前走了两步，又停下来。他的目光落在她脸上，像是在确认她是不是真的存在。
+“二公子……”
+“别叫我二公子。”齐琅的声音有些哑，“你叫我的名字。”
+冯瑛没有说话。
+齐琅又往前走了一步，伸出手，拉住了她的袖子。
+他的手指在发抖。
+“大嫂。”他忽然换了称呼，声音低得像是从喉咙深处挤出来的，“我有一件事，我想问问你。”
+冯瑛站在原地，没有动。
+“你说。”她的声音很轻。
+齐琅张了张嘴，像是想说什么，又咽了回去。他低下头，看着自己握着袖子的那只手，看了很久。
+“你为什么要嫁给我大哥？”他问。
+冯瑛沉默了一瞬。
+“这是我兄长的意思，也是你父亲的意思。”她说。
+“那你呢？”齐琅抬起头，眼睛红红的，像一只受了伤的幼兽，“如果你可以选，你会不会……”
+“二公子。”冯瑛打断了他，“你喝多了。”
+“我清醒得很。我从来没有这么清醒过。”
+他松开了她的袖子，退后一步，靠在了门框上。
+“你知道吗，我每次看见你和大哥在一起，我心里就像被什么东西扎了一下。”
+冯瑛没有说话。
+“我一直想，如果当初是我坐上了世子之位，如今……”他低下头，声音越来越轻。
+冯瑛走到他面前，伸出手，轻轻拍了拍他的手臂。
+“回去吧。”她说，“我让人送你。”
+齐琅摇了摇头。
+冯瑛看着齐琅，看着他这样，她忽然心软了。
+“那就坐下吧。”她说，“我让人给你煮碗醒酒汤。”
+齐琅抬起头，像是有些不敢相信。
+“坐下。”冯瑛又说了一遍，语气比刚才重了一些。
+齐琅乖乖地在椅子上坐下了。
+冯瑛走到门口，吩咐侍女去煮醒酒汤。回来的时候，齐琅还坐在那里，姿势都没变过，双手放在膝盖上，像一个等着被训话的学生。
+冯瑛在他对面坐下。
+两个人都没有说话。
+过了一会儿，侍女端了醒酒汤来。冯瑛接过来，放到齐琅面前。
+“喝了。”
+齐琅低头看着那碗汤，没有动。
+冯瑛端起那碗醒酒汤，递到他嘴边。
+“喝完就别想了。”
+齐琅看了她一眼，接过碗，一口气喝完了。
+他放下碗，忽然觉得眼眶很热。
+一滴，两滴，眼泪落在手背上。
+冯瑛没有动，也没有说话。她只是安静地坐在那里，像一盏不会灭的灯。
+“大嫂，我是不是永远都比不上大哥？”
+冯瑛沉默了很久。
+“你不是比不上他，”她说，“你是太想比上他了。”
+齐琅没有说话。
+“世子殿下从来不跟人比。”冯瑛的声音很轻，“他只是做他自己。你也应该做你自己。”
+齐琅低着头，肩膀微微颤抖。
+过了很久，他终于不哭了。他抬起头，眼睛还是红的，但里面那种尖锐的东西散了一些。
+齐琅靠在椅子上，慢慢地闭上了眼睛。酒意还没有散，加上哭了一场，他的意识开始变得模糊。
+他听见冯瑛起身的声音，听见她拿了什么东西盖在他身上，听见她轻声说了一句什么。
+他睡着了。
+冯瑛站在旁边，看着他的脸。
+睡着了的齐琅，眉头终于舒展开了，不再像白天那样紧锁着。他的睫毛很长，投下一小片阴影，看起来比醒着的时候还要小好几岁。
+冯瑛叹了一口气。
+她把盖在他身上的毯子往上拉了拉，转身走到门口。
+慎胤秀不知道什么时候站在了廊下。
+“阿秀，”冯瑛的声音很低，“去叫人把他抬回他自己的院子。别惊动旁人。”
+慎胤秀点了点头，转身去了。
+冯瑛站在门口，看着深秋的夜空。月亮还挂在那里，冷冷地照着。
+她忽然觉得有些累了。
+第二天一早，冯瑛去了辛夷那里。
+辛夷住的地方离世子府不远，穿过两条巷子就到了。她到的时候天才刚亮，巷子里没有人，只有几只麻雀在屋檐上跳来跳去。
+辛夷还在睡觉。她听见敲门声，披着衣裳来开门，眼睛都睁不开。
+门一开，冷风灌进来。冯瑛站在门口，穿了一件素色的斗篷，兜帽压得很低，看不清脸。
+“令仪？”辛夷揉着眼睛，“这么早——”
+“让我进去。”冯瑛的声音有些哑。
+辛夷愣了一下，侧身让她进来，关上了门。
+屋里没有点灯，只有炉子里余烬的暗红色光，把两个人的影子投在墙上，模模糊糊的。
+冯瑛在床边坐下，没有摘兜帽。她低着头，双手放在膝盖上，指节攥得发白。
+辛夷在她旁边坐下，等了一会儿，见她不说，忍不住问，“怎么了？”
+冯瑛没有说话。
+“跟世子吵架了？”
+摇头。
+“府里出事了？”
+摇头。
+“那到底——”
+“是齐琅。”冯瑛终于开了口。
+辛夷眨了眨眼，“二公子怎么了？”
+冯瑛深吸了一口气，像是要做什么很大的决定，然后一字一句地把昨夜的事说了。
+辛夷听完，张了张嘴，一时不知道该说什么。
+“二公子他……”辛夷的声音有些发紧，“他对你——”
+“嗯。”冯瑛低下头。
+辛夷握住她的手，觉得自己的心跳也快了。
+“世子知道吗？”她问。
+“不知道。”
+“先生大概是知道了。”辛夷叹了一口气，“他早些天和我说过这件事，我还不信。”
+冯瑛沉默了很久。
+“以后我会离他远一些。”她说，“他会想明白的。他还年轻，只是一时糊涂。”
+辛夷握着冯瑛的手，点了点头，“二公子他会想明白的。”
+
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
