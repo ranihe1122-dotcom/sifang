@@ -550,10 +550,10 @@
 
   const works = [
     {
-      title: "偷",
-      link: "tou.html",
-      characters: ["齐琅", "冯瑛"],
-      cps: ["齐琅x冯瑛"],
+      title: "不行",
+      link: "buxing.html",
+      characters: ["詹明", "辛夷","姜玄"],
+      cps: ["詹明x辛夷"],
       types: ["文"],
       authors: ["珩光花信"]
     }
