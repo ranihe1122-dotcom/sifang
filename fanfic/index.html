@@ -672,6 +672,12 @@
     passwordInput.select();
   }
 
+  function sortTags(tags) {
+    return tags.sort((a, b) =>
+      a.localeCompare(b, "zh-Hans-CN", { numeric: true })
+    );
+  }
+
   function getUniqueTags(key) {
     const tagSet = new Set();
 
@@ -679,7 +685,7 @@
       work[key].forEach((tag) => tagSet.add(tag));
     });
 
-    return Array.from(tagSet);
+    return sortTags(Array.from(tagSet));
   }
 
   function createFilterButton(key, tag) {
