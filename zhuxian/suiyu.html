@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>碎玉</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .article-body {
+    display: grid;
+    gap: 1.05em;
+    color: rgba(36,31,27,0.86);
+    font-size: 16px;
+    line-height: 2.05;
+    text-align: justify;
+  }
+
+  .article-body p {
+    text-indent: 2em;
+    white-space: pre-wrap;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.95;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">CHRONICLES</p>
+        <h1>碎玉</h1>
+        <p class="page-caption">四方纪闻 · 固元十八年</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回纪闻</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">固元十八年</span>
+        <span class="type-tag">纪闻</span>
+      </div>
+
+      <h2 class="text-title">碎玉</h2>
+      <div class="divider"></div>
+
+      <div class="article-body" id="articleBody"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回纪闻目录</a>
+    </div>
+
+    <p class="footer-note">四方纪闻 · 碎玉</p>
+  </main>
+
+<script>
+  const rawText = `
+固元十八年，初春。
+齐临川正在政事堂与几位大臣议事。
+“主公，自五年前烛山停止向皇帝陛下进贡，晏朝那位李将军带兵攻烛山后，我军与朔军各自起兵，现如今已攻下承京与奉陵。”
+齐临川听着兵曹参军孟棣安的奏报，又看了一眼手中那份军报，微微皱了皱眉。
+“孟参军，烛山那边，现在如何了？”
+“烛山民众齐心抵抗晏军至今也有四年了，再这样下去，怕是……”
+“朔国那边可有要增援烛山之意？”
+大臣们面面相觑，孟棣安低声回话。
+“回主公，朔王那边，似乎并无此意。”
+齐临川叹了一口气。
+若是让晏军攻破烛山，那于淮朔而言是百害而无一利，朔国兵强冯圭却不愿出兵支援，淮国虽有心，但缺少能领兵的将才，更何况承京一战伤亡惨重，士兵们也需要休养生息。
+“主公，老臣愿往。”说话的人是镇国大将军郑昌延。
+齐斐立即出声，“不可，烛山地势险峻，此去凶险，郑将军年事已高，更是我淮地的镇国大将军，未来一举攻晏之时，还需要郑将军领着将士们杀阵。”
+一时间，政事堂安静了下来。
+齐临川看向立于一边一言不发的辛夷，“桑若，你可有计策？”
+“臣以为……”辛夷踌躇片刻，道，“郑将军之子，郑麟书可往。”
+此话一出，郑昌延第一个开了口，“胡闹！麟书是个只知打死仗的人，不懂谋略如何领兵？更不必说他自入军以来，从未去过烛山。”
+“我自会给他烛山地图，若有需要，也可将领兵之计写下，小郑将军只消得照做。”
+“烛山一役，岂可如此儿戏！”
+场面一时僵持不下，最终还是齐斐开口调停，“若说将才，我倒有一人选。”
+齐临川挑了挑眉，“何人？”
+“回父王，此人正是我淮国的二公子，齐琅。”
+此言一出，众人哗然，但齐斐面不改色，“我与二弟一同由先长史大人教授，二弟通晓兵法，先生也曾数次赞誉二弟谋略得当，是难得的将才！”
+齐临川沉吟片刻，“他也愿意前往烛山？”
+“父王若允，斐愿往一试。”
+
+那日午后，齐琅被齐斐叫到了世子府。
+齐斐屏退众人，只留他一人，与他说清其中利害与如今局势，最后问他。
+“二弟，你可愿领兵前去支援烛山？”
+齐琅低下头，沉默了。齐斐也不催他，二人对坐无言。
+良久，齐琅开了口。
+“大哥，你还是想把我赶出去，是不是？”
+齐斐皱了眉。
+“二弟，这是何意？”
+齐琅再次抬起头时，双眼猩红。
+“就只是出生时晚你一刻，我这一生便处处都要比你矮一截吗！”他猛地站了起来，死死盯着齐斐，“你成日里装出一副温良做派，让先生偏心你，父王也属意你。可若论诗书、骑射，我哪个不如你？偏你靠着装腔作势，不费吹灰之力就坐上了世子之位，还娶了朔国的王女为妻。如今你什么都有了，还想着把我赶出淮郡，大哥，你敢说你不是忌惮我吗？你敢对着我们母亲的神主牌位发誓，说你没有半分私心吗！”
+齐琅说到最后，已是带着哭腔，可当齐琅看向大哥时，发现他还是和平常一样，挂着那副温厚的笑，看不出任何破绽。
+那副表情就像是一堵墙，齐琅撞了十几年，撞得头破血流，可那堵墙纹丝不动。
+他再也无法忍受，跌跌撞撞地跑了出去，不留神撞到了刚回府的冯瑛。
+“二公子，出什么事了，慌慌张张的？”
+齐琅别过头，不去看她，或是不想让她看见自己现在的这副样子。
+只是低声说了一句，“让大嫂见笑了。”便跑开了。
+冯瑛看着他的背影，心中有些不安，便先让下人去齐斐那说一声，自己跟了过去。
+她一直跟着齐琅走到有些冷僻的角落，齐琅停下了脚步。
+“大嫂，你跟着我做什么？”
+冯瑛缓步上前，伸手将他握紧拳的左手拢在掌心里，小心地掰开他的手指。
+“二公子，别攥那么紧，都出印子了。”
+齐琅看着她低头轻轻揉着自己掌心的样子，一时忍不住，落下了泪。
+“大嫂，在这淮郡，只有你疼惜我。”
+“怎么会呢，你父王和大哥也是疼你的，只是他们不像我这样。”冯瑛笑着，抬手为他擦了擦眼泪，“是不是你大哥说话不好听，给你气受了？”
+冯瑛见他不说话，也就自顾自地说了下去，“我听他说过，你们二人的母亲去得早，因而从小什么事都要自己扛着，你心里一定不好受。要是他欺负你了，和我说说？”
+齐琅张了张嘴，他有许多的话要说，却知道那些事情说出来也只会给冯瑛招致麻烦。
+“大哥要我领兵去烛山。”
+“那我应该恭喜二公子了，从前常听詹先生说二公子善兵法，小郑将军又赞二公子剑法超群，若是此去顺利，是不是马上就能当上大将军了？”
+齐琅愣了一下，他看着冯瑛的表情，他从未被人用这样的神情看过。
+那是带着些期许的神情。
+詹明从前这样看过齐斐，齐临川也曾这样看过詹明。
+齐琅一直绷着的肩膀忽然松动了，“什么……我？当大将军？”
+而后，他又有些自嘲地说，“大嫂还是别对我这样的人寄予厚望了，任凭他们再怎么夸赞，当年也没有选我做世子，这场世子之争，我连争得机会都没有。我恨先生，可他如今死了，死前还说什么对不住我，害我恨他都不能恨得有理……”
+他的声音又低了下去，“我分明什么都没有过，现在大哥还要把我赶走。”
+“齐琅，”冯瑛开口打断了他，“这里没有人要赶你走。”
+这是她第一次喊他的名字。
+“你跟我回去，坐下来好好跟你大哥把话说清楚。好不好？”
+她试探着抓住了齐琅的手腕，他没有挣开她，只是默默跟在她身后，又回到了世子府。
+走到齐斐的书房前，冯瑛松开了齐琅，“他就在里面，你自己进去吧。”
+齐琅有些艰难地挪动步子再次走进了齐斐的书房。
+齐斐看着他，缓缓开口。
+“怀石，你知道，先生为何不选你吗？”
+他没等齐琅说话，便接着说了下去。
+“还记得我们十二岁的时候吗？你比我聪明，不管学什么，你都是一点就通，可每逢父王考校，你总会错一两处。先生说你太急了，急着想要证明自己。越是心急，便越容易出错漏。你认为，你每错一次，便觉得是输给我了，便要同我赌气，一周都不愿来学堂。”
+听齐斐这么一说，齐琅忽而想起了从前的事情。
+每回齐临川来考他们二人，他总是想比齐斐答得快一点，于是思考的时候短了些，也便漏下了不少东西。
+在齐临川的眼里，就是他急功冒进，思虑不全。
+立了世子之后，他愈发不满。
+年岁越长，他的性子没有沉下去，反而是更急了，不管齐斐说什么，他都要与齐斐作对。
+他如今闹得这一遭，就恰恰说明詹明那时的决策是对的。
+“若当时父王立我做世子，大哥你会如何？”
+齐琅问出口后，觉得有些奇怪，便自答，“大哥有如此雅量，大概会说好好辅佐我这种话吧。大哥做什么事都是最好的。”
+齐斐看着齐琅的样子，忽而想起小时候，那时齐琅跑得快摔了一跤，磕破了膝盖，却死死咬着下唇不肯哭出来。
+夜里母亲给他们两个洗澡才发现齐琅膝盖上的伤，问他为什么不哭。
+他说，“若我哭了，在父亲眼里就会不如大哥。”
+母亲问他，“你大哥也摔了吗？”
+他摇了摇头，“大哥做什么事都是最好的，就连走路也走得很稳，从不摔跤。”
+大哥做什么事都是最好的。
+齐斐垂下眼眸，低声道，“或许，我也会不满，也会恨先生和父王看不到我的才能，也会闹着要一个公平。”
+他说着，叹了一口气，“那么怀石，若是你做了世子，你会忌惮我想将我赶出淮郡吗？”
+齐琅说不出话来，只是用力摇了摇头。
+齐斐上前一步，用力抱住了他，“我也是一样的。烛山一役颇为凶险，我也不忍让你只身前往，可父王手下缺懂谋略的将军，我这才荐了你去。眼下只有你领兵相助，才能保住烛山，你可愿？”
+齐琅缓缓闭上了眼睛，回抱住了齐斐。
+“好……我去。”
+齐琅走的那一日，齐斐与冯瑛都来送他。
+齐斐没有说什么离别之词，只是点了点头。
+冯瑛看着他，轻声嘱咐，“一路平安。”
+齐琅眨了眨眼睛，翻身上马。
+郑麟书在一旁笑着跟他们招手，“世子夫人，麻烦帮我跟辛夷大人说一声，让她等我回来——我、我给她带烛山的东西。”
+“走了，小郑将军！”
+固元十八年暮春。
+淮公子齐琅引兵援烛山。
+战酣，将军郑麟书为琅挡刀，殁于阵前。
+军报送至辛夷手中，她看着结尾那几个字，看了很久。
+“小郑将军说，烛山一役很顺利，要辛夷大人放心。”
+辛夷有一瞬间的晃神。
+郑麟书那个人，或许不止说了这些。
+只是其他的话，写不进军报。
+
+  `;
+
+  const articleBody = document.querySelector("#articleBody");
+
+  function escapeHTML(text) {
+    return text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  articleBody.innerHTML = rawText
+    .trim()
+    .split(/\n\s*\n|\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0)
+    .map(paragraph => `<p>${escapeHTML(paragraph)}</p>`)
+    .join("");
+</script>
+</body>
+</html>
