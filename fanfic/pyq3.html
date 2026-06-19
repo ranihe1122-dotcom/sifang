@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>朋友圈合集3</title>
+
+<style>
+  :root {
+    --ink: #241f1b;
+    --deep: #2e201d;
+    --cinnabar: #883a1e;
+    --gold: #9a743c;
+    --paper: #efe6d3;
+    --paper-deep: #d9c8ad;
+    --line: rgba(36,31,27,0.28);
+    --muted: rgba(36,31,27,0.62);
+    --shadow: 0 18px 42px rgba(36,31,27,0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 28px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(136,58,30,0.10), transparent 26rem),
+      radial-gradient(circle at 86% 22%, rgba(49,84,68,0.08), transparent 28rem),
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+    font-family: "Songti SC", "Noto Serif SC", "STSong", serif;
+    color: var(--ink);
+    line-height: 1.9;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.72;
+    z-index: -1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .page {
+    width: min(860px, calc(100% - 24px));
+    margin: 0 auto;
+    padding: 18px 0 56px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .eyebrow {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--cinnabar);
+    letter-spacing: 0.24em;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    color: var(--deep);
+    font-weight: 800;
+  }
+
+  h1::after {
+    content: "";
+    display: block;
+    width: 76px;
+    height: 2px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--cinnabar), transparent);
+    opacity: 0.55;
+  }
+
+  .page-caption {
+    margin-top: 14px;
+    max-width: 620px;
+    color: rgba(36,31,27,0.62);
+    font-size: 14px;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding-top: 6px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid rgba(36,31,27,0.28);
+    background: rgba(239,232,216,0.72);
+    color: rgba(36,31,27,0.82);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(136,58,30,0.10);
+    color: var(--cinnabar);
+    transform: translateY(-1px);
+  }
+
+  .text-card {
+    border: 1px solid rgba(36,31,27,0.32);
+    background:
+      linear-gradient(180deg, rgba(251,243,228,0.88), rgba(239,232,216,0.76));
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .text-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(70, 52, 35, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(70, 52, 35, 0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.58;
+  }
+
+  .text-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  .year-tag,
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid rgba(136,58,30,0.20);
+    background: rgba(136,58,30,0.08);
+    color: var(--cinnabar);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .type-tag {
+    border-color: rgba(154,116,60,0.22);
+    background: rgba(154,116,60,0.08);
+    color: var(--gold);
+  }
+
+  .text-title {
+    margin-bottom: 6px;
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: 0.16em;
+    color: var(--deep);
+    line-height: 1.25;
+  }
+
+  .text-subtitle {
+    margin-bottom: 26px;
+    color: var(--muted);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.10em;
+  }
+
+  .divider {
+    width: 72px;
+    height: 1px;
+    margin: 4px 0 24px;
+    background: linear-gradient(90deg, rgba(136,58,30,0.56), transparent);
+  }
+
+  .gallery {
+    position: relative;
+    display: grid;
+    grid-template-columns: 42px 1fr 42px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .gallery-frame {
+    margin: 0;
+    border: 1px solid rgba(36,31,27,0.24);
+    background: rgba(255,250,240,0.54);
+    padding: 12px;
+    box-shadow: 0 10px 24px rgba(36,31,27,0.10);
+  }
+
+  .gallery-frame img {
+    display: block;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    background: rgba(239,232,216,0.62);
+  }
+
+  .gallery-placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 420px;
+    border: 1px dashed rgba(36,31,27,0.24);
+    background:
+      linear-gradient(180deg, rgba(255,250,240,0.56), rgba(239,232,216,0.48));
+    color: rgba(36,31,27,0.48);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  .gallery-frame figcaption {
+    margin-top: 10px;
+    color: rgba(36,31,27,0.62);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .gallery-btn {
+    width: 42px;
+    height: 72px;
+    border: 1px solid rgba(36,31,27,0.26);
+    background: rgba(239,232,216,0.72);
+    color: var(--cinnabar);
+    font-size: 34px;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .gallery-btn:hover {
+    background: rgba(136,58,30,0.10);
+    transform: translateY(-1px);
+  }
+
+  .gallery-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .gallery-count {
+    margin-top: 14px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .bottom-nav {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    color: rgba(36,31,27,0.56);
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      padding-top: 12px;
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-actions {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+    }
+
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery-btn {
+      width: 100%;
+      height: 42px;
+    }
+
+    .gallery-btn.prev {
+      order: 2;
+    }
+
+    .gallery-frame {
+      order: 1;
+    }
+
+    .gallery-btn.next {
+      order: 3;
+    }
+
+    .gallery-frame img {
+      max-height: 68vh;
+    }
+
+    .gallery-placeholder {
+      min-height: 320px;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">FANWORKS</p>
+        <h1>朋友圈合集3</h1>
+        <p class="page-caption">作者：苦茶子</p>
+      </div>
+
+      <nav class="nav-actions" aria-label="页面导航">
+        <a class="nav-link" href="index.html">返回杂谈</a>
+        <a class="nav-link" href="../index.html">返回首页</a>
+      </nav>
+    </header>
+
+    <article class="text-card">
+      <div class="text-meta">
+        <span class="year-tag">大乱炖</span>
+        <span class="type-tag">朋友圈体</span>
+      </div>
+
+      <h2 class="text-title">朋友圈合集3</h2>
+      <p class="text-subtitle">CP大乱炖</p>
+      <div class="divider"></div>
+
+      <div class="gallery">
+        <button class="gallery-btn prev" type="button" id="prevBtn">‹</button>
+
+        <figure class="gallery-frame">
+          <img id="galleryImage" src="" alt="" style="display: none;">
+          <div class="gallery-placeholder" id="galleryPlaceholder">
+            图片<br>
+          </div>
+          <figcaption id="galleryCaption"></figcaption>
+        </figure>
+
+        <button class="gallery-btn next" type="button" id="nextBtn">›</button>
+      </div>
+
+      <div class="gallery-count" id="galleryCount"></div>
+    </article>
+
+    <div class="bottom-nav">
+      <a class="nav-link" href="index.html">返回杂谈</a>
+    </div>
+
+    <p class="footer-note">杂谈 · 朋友圈合集3</p>
+  </main>
+
+<script>
+  const images = [
+    {
+      src: "https://f2.toyhou.se/file/f2-toyhou-se/images/121966395_DBkXZLxvEcDuHyU.jpg",
+      alt: "图一",
+      caption: ""
+    },
+    {
+      src: "https://f2.toyhou.se/file/f2-toyhou-se/images/121966388_UsA1gvs5IQ3NXmi.jpg",
+      alt: "图二",
+      caption: ""
+    },
+    {
+      src: "https://f2.toyhou.se/file/f2-toyhou-se/images/121966381_FSWQ9N0RNRJk02R.jpg",
+      alt: "图三",
+      caption: ""
+    },
+    {
+      src: "https://f2.toyhou.se/file/f2-toyhou-se/images/121966379_F9sMX5KmIhx48Lg.jpg",
+      alt: "图四",
+      caption: ""
+    },
+    {
+      src: "https://f2.toyhou.se/file/f2-toyhou-se/images/121966344_lasweKXAxUhjTpj.jpg",
+      alt: "图五",
+      caption: ""
+    }
+  ];
+
+  let currentIndex = 0;
+
+  const galleryImage = document.querySelector("#galleryImage");
+  const galleryPlaceholder = document.querySelector("#galleryPlaceholder");
+  const galleryCaption = document.querySelector("#galleryCaption");
+  const galleryCount = document.querySelector("#galleryCount");
+  const prevBtn = document.querySelector("#prevBtn");
+  const nextBtn = document.querySelector("#nextBtn");
+
+  function renderGallery() {
+    const current = images[currentIndex];
+
+    if (current.src && current.src.trim() !== "") {
+      galleryImage.src = current.src;
+      galleryImage.alt = current.alt || "";
+      galleryImage.style.display = "block";
+      galleryPlaceholder.style.display = "none";
+    } else {
+      galleryImage.removeAttribute("src");
+      galleryImage.alt = "";
+      galleryImage.style.display = "none";
+      galleryPlaceholder.style.display = "grid";
+      galleryPlaceholder.innerHTML = `图片 ${currentIndex + 1} `;
+    }
+
+    galleryCaption.textContent = current.caption || "";
+    galleryCount.textContent = `${currentIndex + 1} / ${images.length}`;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === images.length - 1;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex -= 1;
+      renderGallery();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < images.length - 1) {
+      currentIndex += 1;
+      renderGallery();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" && currentIndex > 0) {
+      currentIndex -= 1;
+      renderGallery();
+    }
+
+    if (event.key === "ArrowRight" && currentIndex < images.length - 1) {
+      currentIndex += 1;
+      renderGallery();
+    }
+  });
+
+  renderGallery();
+</script>
+</body>
+</html>
